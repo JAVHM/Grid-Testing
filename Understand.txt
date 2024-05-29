@@ -1,0 +1,20 @@
+Necesario para entender el código
+
+Namespaces:
+1. Pathfinding._Script
+	- Pathfinding
+	- ScriptableGrid
+	- ScriptableSquareGrid
+	- Unit
+	- GridManager
+2. Node.Tiles
+	- Node
+	- Square
+
+Funcionamiento:
+GridManager:
+	- Encargado de instanciar todo lo necesario para generar el mapa
+	- Funciones:
+		- SpawnUnits
+		- TileSelected
+		- GetTileAtPosition

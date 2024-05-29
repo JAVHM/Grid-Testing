@@ -18,26 +18,28 @@ namespace Nodes.Tiles {
         private bool _selected;
         private Color _defaultColor;
 
+        public static event Action<NodeBase> OnSelectTile;
+        private void OnEnable() => OnSelectTile += TileSelected;
+        private void OnDisable() => OnSelectTile -= TileSelected;
+
         public virtual void Init(bool walkable, ICoords coords) {
             Walkable = walkable;
 
             _renderer.color = walkable ? _walkableColor.Evaluate(Random.Range(0f, 1f)) : _obstacleColor.Evaluate(Random.Range(0f, 1f));
             _defaultColor = _renderer.color;
 
-            OnHoverTile += OnOnHoverTile;
+            OnSelectTile += TileSelected;
 
             Coords = coords;
             transform.position = Coords.Pos;
         }
 
-        public static event Action<NodeBase> OnHoverTile;
-        private void OnEnable() => OnHoverTile += OnOnHoverTile;
-        private void OnDisable() => OnHoverTile -= OnOnHoverTile;
-        private void OnOnHoverTile(NodeBase selected) => _selected = selected == this;
+        
+        private void TileSelected(NodeBase selected) => _selected = selected == this;
 
         protected virtual void OnMouseDown() {
             if (!Walkable) return;
-            OnHoverTile?.Invoke(this);
+            OnSelectTile?.Invoke(this);
         }
 
         #region Pathfinding

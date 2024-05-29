@@ -28,7 +28,7 @@ namespace Pathfinding._Scripts.Grid {
             foreach (var tile in tiles.Values) tile.CacheNeighbors();
 
             SpawnUnits();
-            NodeBase.OnHoverTile += OnTileHover;
+            NodeBase.OnSelectTile += TileSelected;
         }
         void SpawnUnits()
         {
@@ -40,9 +40,9 @@ namespace Pathfinding._Scripts.Grid {
             _spawnedGoal.Init(_goalSprite);
         }
 
-        private void OnDestroy() => NodeBase.OnHoverTile -= OnTileHover;
+        private void OnDestroy() => NodeBase.OnSelectTile -= TileSelected;
 
-        private void OnTileHover(NodeBase nodeBase) {
+        private void TileSelected(NodeBase nodeBase) {
             _goalNodeBase = nodeBase;
             _spawnedGoal.transform.position = _goalNodeBase.Coords.Pos;
 
