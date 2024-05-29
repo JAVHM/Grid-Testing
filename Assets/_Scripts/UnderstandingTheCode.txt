@@ -1,0 +1,72 @@
+Summary for Unity Project Code
+
+Namespaces
+	Pathfinding._Scripts
+		GridManager
+		Pathfinding
+		ScriptableGrid
+		ScriptableSquareGrid
+		Unit
+		Nodes.Tiles
+	NodeBase
+		SquareNode
+		SquareCoords
+
+Class Details:
+	GridManager:
+		Manages the grid and units within the game.
+		Functions:
+			SpawnUnits(): Instantiates player and goal units at random walkable tiles.
+			TileSelected(NodeBase nodeBase): Updates goal unit position and calculates path when a tile is selected.
+			GetTileAtPosition(Vector2 pos): Retrieves a tile at a given position. (Returns NodeBase)
+
+	Unit:
+		Represents game objects like "player" and "target."
+		Functions:
+			Init(Sprite sprite): Initializes the unit with a given sprite.
+
+	NodeBase (Abstract):
+		Represents a base class for grid nodes with pathfinding capabilities.
+		Properties:
+			Coords: Coordinates of the node.
+			Walkable: Indicates if the node is walkable.
+		Functions:
+			Init(bool walkable, ICoords coords): Initializes the node with walkability and coordinates.
+			TileSelected(NodeBase selected): Handles tile selection.
+			OnMouseDown(): Triggers when the node is clicked.
+			abstract CacheNeighbors(): Caches neighboring nodes.
+			SetConnection(NodeBase nodeBase): Sets connection to another node.
+			SetG(float g): Sets G cost for pathfinding.
+			SetH(float h): Sets H cost for pathfinding.
+			SetText(): Updates the cost text display.
+			SetColor(Color color): Sets the node color.
+			RevertTile(): Reverts the node to its default state.
+		Interface ICoords:
+			float GetDistance(ICoords other): Calculates the distance to another coordinate. (Returns float)
+			Vector2 Pos { get; set; }: Position property.
+
+	SquareNode (NodeBase):
+		Specific implementation for square grid nodes.
+		Functions:
+			CacheNeighbors(): Caches neighboring nodes in the four possible directions.
+			Init(bool walkable, ICoords coords): Initializes the square node.
+		SquareCoords (Struct):
+			Represents coordinates for square nodes.
+			Functions:
+				GetDistance(ICoords other): Calculates the distance to another coordinate. (Returns float)
+
+	Pathfinding (Static):
+		Contains the pathfinding algorithm.
+			Functions:
+				static List<NodeBase> FindPath(NodeBase startNode, NodeBase targetNode): Finds the path from start node to target node. (Returns List<NodeBase>)
+
+	ScriptableGrid (Abstract):
+		Base class for creating grid structures.
+		Functions:
+			abstract Dictionary<Vector2, NodeBase> GenerateGrid(): Generates the grid of nodes. (Returns Dictionary<Vector2, NodeBase>)
+			DecideIfObstacle(): Decides if a node should be an obstacle. (Returns bool)
+
+	ScriptableSquareGrid (ScriptableGrid):
+		Specific implementation for square grids.
+		Functions:
+			override Dictionary<Vector2, NodeBase> GenerateGrid(): Generates a grid of square nodes. (Returns Dictionary<Vector2, NodeBase>)
