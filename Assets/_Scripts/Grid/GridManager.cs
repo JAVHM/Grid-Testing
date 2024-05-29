@@ -30,6 +30,15 @@ namespace Pathfinding._Scripts.Grid {
             SpawnUnits();
             NodeBase.OnHoverTile += OnTileHover;
         }
+        void SpawnUnits()
+        {
+            _playerNodeBase = tiles.Where(t => t.Value.Walkable).OrderBy(t => Random.value).First().Value;
+            _spawnedPlayer = Instantiate(_unitPrefab, _playerNodeBase.Coords.Pos, Quaternion.identity);
+            _spawnedPlayer.Init(_playerSprite);
+
+            _spawnedGoal = Instantiate(_unitPrefab, new Vector3(50, 50, 50), Quaternion.identity);
+            _spawnedGoal.Init(_goalSprite);
+        }
 
         private void OnDestroy() => NodeBase.OnHoverTile -= OnTileHover;
 
@@ -42,14 +51,7 @@ namespace Pathfinding._Scripts.Grid {
             var path = Pathfinding.FindPath(_playerNodeBase, _goalNodeBase);
         }
 
-        void SpawnUnits() {
-            _playerNodeBase = tiles.Where(t => t.Value.Walkable).OrderBy(t => Random.value).First().Value;
-            _spawnedPlayer = Instantiate(_unitPrefab, _playerNodeBase.Coords.Pos, Quaternion.identity);
-            _spawnedPlayer.Init(_playerSprite);
-
-            _spawnedGoal = Instantiate(_unitPrefab, new Vector3(50, 50, 50), Quaternion.identity);
-            _spawnedGoal.Init(_goalSprite);
-        }
+        
 
         public NodeBase GetTileAtPosition(Vector2 pos) => tiles.TryGetValue(pos, out var tile) ? tile : null;
 

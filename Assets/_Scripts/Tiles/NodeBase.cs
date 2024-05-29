@@ -6,9 +6,9 @@ using Random = UnityEngine.Random;
 
 namespace Nodes.Tiles {
     public abstract class NodeBase : MonoBehaviour {
-        [Header("References")] [SerializeField]
-        private Color _obstacleColor;
+        [Header("References")]
 
+        [SerializeField] private Gradient _obstacleColor;
         [SerializeField] private Gradient _walkableColor;
         [SerializeField] protected SpriteRenderer _renderer;
      
@@ -21,7 +21,7 @@ namespace Nodes.Tiles {
         public virtual void Init(bool walkable, ICoords coords) {
             Walkable = walkable;
 
-            _renderer.color = walkable ? _walkableColor.Evaluate(Random.Range(0f, 1f)) : _obstacleColor;
+            _renderer.color = walkable ? _walkableColor.Evaluate(Random.Range(0f, 1f)) : _obstacleColor.Evaluate(Random.Range(0f, 1f));
             _defaultColor = _renderer.color;
 
             OnHoverTile += OnOnHoverTile;
