@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using _Scripts.Tiles;
+using Nodes.Tiles;
 using UnityEngine;
 
-namespace Tarodev_Pathfinding._Scripts {
+namespace Pathfinding._Scripts {
     /// <summary>
     /// This algorithm is written for readability. Although it would be perfectly fine in 80% of games, please
     /// don't use this in an RTS without first applying some optimization mentioned in the video: https://youtu.be/i0x5fj4PqP4

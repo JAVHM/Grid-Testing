@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using _Scripts.Tiles;
+using Nodes.Tiles;
 using UnityEngine;
 
-namespace Tarodev_Pathfinding._Scripts.Grid.Scriptables {
+namespace Pathfinding._Scripts.Grid.Scriptables {
     [CreateAssetMenu(fileName = "New Scriptable Square Grid")]
     public class ScriptableSquareGrid : ScriptableGrid
     {

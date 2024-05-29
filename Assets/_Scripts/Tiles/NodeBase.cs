@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace _Scripts.Tiles {
+namespace Nodes.Tiles {
     public abstract class NodeBase : MonoBehaviour {
         [Header("References")] [SerializeField]
         private Color _obstacleColor;
