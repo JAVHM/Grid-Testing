@@ -37,7 +37,7 @@ namespace Nodes.Tiles {
         
         private void TileSelected(NodeBase selected) => _selected = selected == this;
 
-        protected virtual void OnMouseDown() {
+        public void NodeIsSelectect() {
             if (!Walkable) return;
             OnSelectTile?.Invoke(this);
         }

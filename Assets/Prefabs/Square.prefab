@@ -104,6 +104,10 @@ PrefabInstance:
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5441756845999417297, guid: f779211c4413df540a96697ec9d4124b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5799129059999396217, guid: f779211c4413df540a96697ec9d4124b, type: 3}
       propertyPath: m_Name
       value: Square
