@@ -23,6 +23,8 @@ namespace Nodes.Tiles {
         public static event Action<NodeBase> OnSelectTile;
         public static event Action<NodeBase> OnMappedTile;
 
+        public bool _isInRange = false;
+
         public virtual void Init(bool walkable, ICoords coords) {
             Walkable = walkable;
 
@@ -36,13 +38,16 @@ namespace Nodes.Tiles {
 
 
         public void NodeIsSelectect() {
-            if (!Walkable) return;
+            print(Walkable);
+            print(_isInRange);
+            if (!Walkable || !_isInRange) return;
             OnSelectTile?.Invoke(this);
         }
 
         public void NodeIsMapped()
         {
             if (!Walkable) return;
+            _isInRange = true;
             OnMappedTile?.Invoke(this);
         }
 

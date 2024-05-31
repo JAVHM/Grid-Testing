@@ -85,6 +85,7 @@ namespace Pathfinding._Scripts {
                 if (currentCost > maxCost) continue;
 
                 current.SetColor(Color.red);
+                current._isInRange = true;
                 reachableNodes.Add(current);
 
                 foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t)))
@@ -101,5 +102,36 @@ namespace Pathfinding._Scripts {
             return reachableNodes;
         }
 
+
+        public static List<NodeBase> IsReachableNodes(NodeBase startNode, int maxCost)
+        {
+            var toSearch = new Queue<(NodeBase node, float currentCost)>();
+            var processed = new HashSet<NodeBase>();
+            var reachableNodes = new List<NodeBase>();
+
+            toSearch.Enqueue((startNode, 0));
+            processed.Add(startNode);
+
+            while (toSearch.Any())
+            {
+                var (current, currentCost) = toSearch.Dequeue();
+
+                if (currentCost > maxCost) continue;
+
+                reachableNodes.Add(current);
+
+                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t)))
+                {
+                    var costToNeighbor = currentCost + neighbor.tileWalkValue;
+                    if (costToNeighbor <= maxCost)
+                    {
+                        processed.Add(neighbor);
+                        toSearch.Enqueue((neighbor, costToNeighbor));
+                    }
+                }
+            }
+
+            return reachableNodes;
+        }
     }
 }

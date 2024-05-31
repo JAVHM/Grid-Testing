@@ -20,6 +20,8 @@ namespace Pathfinding._Scripts.Grid {
         private NodeBase _playerNodeBase, _goalNodeBase;
         private Unit _spawnedPlayer, _spawnedGoal;
 
+        private List<NodeBase> reacheableNodes = new List<NodeBase>();
+
         void Awake() => Instance = this;
 
         private void Start() {
@@ -50,12 +52,14 @@ namespace Pathfinding._Scripts.Grid {
 
             foreach (var t in tiles.Values) t.RevertTile();
 
-            if (Pathfinding.MarkReachableNodes(_playerNodeBase, 10).Contains(_goalNodeBase))
+            if (Pathfinding.IsReachableNodes(_playerNodeBase, 10).Contains(_goalNodeBase))
             {
                 var path = Pathfinding.FindPath(_playerNodeBase, _goalNodeBase);
                 _spawnedPlayer.transform.position = _goalNodeBase.transform.position;
                 _playerNodeBase = _goalNodeBase;
             }
+
+            ResetReachebleNodes();
         }
 
         private void TileMapped(NodeBase nodeBase)
@@ -65,7 +69,15 @@ namespace Pathfinding._Scripts.Grid {
 
             foreach (var t in tiles.Values) t.RevertTile();
 
-            Pathfinding.MarkReachableNodes(nodeBase, 10);
+            reacheableNodes = Pathfinding.MarkReachableNodes(nodeBase, 10);
+        }
+
+        private void ResetReachebleNodes()
+        {
+            foreach(NodeBase n in reacheableNodes)
+            {
+                n._isInRange = false;
+            }
         }
 
         public NodeBase GetTileAtPosition(Vector2 pos) => tiles.TryGetValue(pos, out var tile) ? tile : null;
