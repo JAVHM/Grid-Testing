@@ -12,7 +12,7 @@ namespace Pathfinding._Scripts.Grid {
 
         [SerializeField] private Sprite _playerSprite, _goalSprite;
         [SerializeField] private Unit _unitPrefab;
-        [SerializeField] private ScriptableGrid _scriptableGrid;
+        [SerializeField] private ScriptableSquareGrid _scriptableGrid;
         [SerializeField] private bool _drawConnections;
 
         public Dictionary<Vector2, NodeBase> tiles { get; private set; }
@@ -29,6 +29,7 @@ namespace Pathfinding._Scripts.Grid {
 
             SpawnUnits();
             NodeBase.OnSelectTile += TileSelected;
+            NodeBase.OnMappedTile += TileMapped;
         }
         void SpawnUnits()
         {
@@ -51,7 +52,15 @@ namespace Pathfinding._Scripts.Grid {
             var path = Pathfinding.FindPath(_playerNodeBase, _goalNodeBase);
         }
 
-        
+        private void TileMapped(NodeBase nodeBase)
+        {
+            _goalNodeBase = nodeBase;
+            _spawnedGoal.transform.position = _goalNodeBase.Coords.Pos;
+
+            foreach (var t in tiles.Values) t.RevertTile();
+
+            Pathfinding.MarkReachableNodes(nodeBase, 5);
+        }
 
         public NodeBase GetTileAtPosition(Vector2 pos) => tiles.TryGetValue(pos, out var tile) ? tile : null;
 

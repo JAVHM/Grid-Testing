@@ -68,5 +68,29 @@ namespace Pathfinding._Scripts {
             }
             return null;
         }
+
+        public static void MarkReachableNodes(NodeBase startNode, int steps)
+        {
+            var toSearch = new Queue<(NodeBase node, int currentStep)>();
+            var processed = new HashSet<NodeBase>();
+
+            toSearch.Enqueue((startNode, 0));
+            processed.Add(startNode);
+
+            while (toSearch.Any())
+            {
+                var (current, currentStep) = toSearch.Dequeue();
+
+                if (currentStep > steps) continue;
+
+                current.SetColor(Color.red);
+
+                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t)))
+                {
+                    processed.Add(neighbor);
+                    toSearch.Enqueue((neighbor, currentStep + 1));
+                }
+            }
+        }
     }
 }

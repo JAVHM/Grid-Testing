@@ -15,12 +15,10 @@ namespace Nodes.Tiles {
         public ICoords Coords;
         public float GetDistance(NodeBase other) => Coords.GetDistance(other.Coords); // Helper to reduce noise in pathfinding
         public bool Walkable { get; private set; }
-        private bool _selected;
         private Color _defaultColor;
 
         public static event Action<NodeBase> OnSelectTile;
-        private void OnEnable() => OnSelectTile += TileSelected;
-        private void OnDisable() => OnSelectTile -= TileSelected;
+        public static event Action<NodeBase> OnMappedTile;
 
         public virtual void Init(bool walkable, ICoords coords) {
             Walkable = walkable;
@@ -28,18 +26,20 @@ namespace Nodes.Tiles {
             _renderer.color = walkable ? _walkableColor.Evaluate(Random.Range(0f, 1f)) : _obstacleColor.Evaluate(Random.Range(0f, 1f));
             _defaultColor = _renderer.color;
 
-            OnSelectTile += TileSelected;
-
             Coords = coords;
             transform.position = Coords.Pos;
         }
 
-        
-        private void TileSelected(NodeBase selected) => _selected = selected == this;
 
         public void NodeIsSelectect() {
             if (!Walkable) return;
             OnSelectTile?.Invoke(this);
+        }
+
+        public void NodeIsMapped()
+        {
+            if (!Walkable) return;
+            OnMappedTile?.Invoke(this);
         }
 
         #region Pathfinding
@@ -71,7 +71,6 @@ namespace Nodes.Tiles {
         }
 
         private void SetText() {
-            if (_selected) return;
             _gCostText.text = G.ToString();
             _hCostText.text = H.ToString();
             _fCostText.text = F.ToString();
