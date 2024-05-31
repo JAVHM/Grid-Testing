@@ -69,28 +69,37 @@ namespace Pathfinding._Scripts {
             return null;
         }
 
-        public static void MarkReachableNodes(NodeBase startNode, int steps)
+        public static List<NodeBase> MarkReachableNodes(NodeBase startNode, int maxCost)
         {
-            var toSearch = new Queue<(NodeBase node, int currentStep)>();
+            var toSearch = new Queue<(NodeBase node, float currentCost)>();
             var processed = new HashSet<NodeBase>();
+            var reachableNodes = new List<NodeBase>();
 
             toSearch.Enqueue((startNode, 0));
             processed.Add(startNode);
 
             while (toSearch.Any())
             {
-                var (current, currentStep) = toSearch.Dequeue();
+                var (current, currentCost) = toSearch.Dequeue();
 
-                if (currentStep > steps) continue;
+                if (currentCost > maxCost) continue;
 
                 current.SetColor(Color.red);
+                reachableNodes.Add(current);
 
                 foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t)))
                 {
-                    processed.Add(neighbor);
-                    toSearch.Enqueue((neighbor, currentStep + 1));
+                    var costToNeighbor = currentCost + neighbor.tileWalkValue;
+                    if (costToNeighbor <= maxCost)
+                    {
+                        processed.Add(neighbor);
+                        toSearch.Enqueue((neighbor, costToNeighbor));
+                    }
                 }
             }
+
+            return reachableNodes;
         }
+
     }
 }

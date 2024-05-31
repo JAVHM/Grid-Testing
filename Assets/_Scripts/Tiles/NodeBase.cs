@@ -1,3 +1,4 @@
+using Pathfinding._Scripts.Units;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -8,9 +9,11 @@ namespace Nodes.Tiles {
     public abstract class NodeBase : MonoBehaviour {
         [Header("References")]
 
-        [SerializeField] private Gradient _obstacleColor;
-        [SerializeField] private Gradient _walkableColor;
+        [SerializeField] private Color _obstacleColor;
+        [SerializeField] private Color _walkableColor;
         [SerializeField] protected SpriteRenderer _renderer;
+        public int tileWalkValue;
+        public Unit tileUnit;
      
         public ICoords Coords;
         public float GetDistance(NodeBase other) => Coords.GetDistance(other.Coords); // Helper to reduce noise in pathfinding
@@ -23,7 +26,8 @@ namespace Nodes.Tiles {
         public virtual void Init(bool walkable, ICoords coords) {
             Walkable = walkable;
 
-            _renderer.color = walkable ? _walkableColor.Evaluate(Random.Range(0f, 1f)) : _obstacleColor.Evaluate(Random.Range(0f, 1f));
+            _renderer.color = walkable ? _walkableColor : _obstacleColor;
+
             _defaultColor = _renderer.color;
 
             Coords = coords;

@@ -36,6 +36,7 @@ namespace Pathfinding._Scripts.Grid {
             _playerNodeBase = tiles.Where(t => t.Value.Walkable).OrderBy(t => Random.value).First().Value;
             _spawnedPlayer = Instantiate(_unitPrefab, _playerNodeBase.Coords.Pos, Quaternion.identity);
             _spawnedPlayer.Init(_playerSprite);
+            _playerNodeBase.tileUnit = _spawnedPlayer;
 
             _spawnedGoal = Instantiate(_unitPrefab, new Vector3(50, 50, 50), Quaternion.identity);
             _spawnedGoal.Init(_goalSprite);
@@ -49,7 +50,12 @@ namespace Pathfinding._Scripts.Grid {
 
             foreach (var t in tiles.Values) t.RevertTile();
 
-            var path = Pathfinding.FindPath(_playerNodeBase, _goalNodeBase);
+            if (Pathfinding.MarkReachableNodes(_playerNodeBase, 10).Contains(_goalNodeBase))
+            {
+                var path = Pathfinding.FindPath(_playerNodeBase, _goalNodeBase);
+                _spawnedPlayer.transform.position = _goalNodeBase.transform.position;
+                _playerNodeBase = _goalNodeBase;
+            }
         }
 
         private void TileMapped(NodeBase nodeBase)
@@ -59,7 +65,7 @@ namespace Pathfinding._Scripts.Grid {
 
             foreach (var t in tiles.Values) t.RevertTile();
 
-            Pathfinding.MarkReachableNodes(nodeBase, 5);
+            Pathfinding.MarkReachableNodes(nodeBase, 10);
         }
 
         public NodeBase GetTileAtPosition(Vector2 pos) => tiles.TryGetValue(pos, out var tile) ? tile : null;
