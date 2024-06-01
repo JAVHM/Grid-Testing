@@ -1,4 +1,5 @@
 using Nodes.Tiles;
+using Pathfinding._Scripts.Grid;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +30,10 @@ public class GameplayManager : MonoBehaviour
 
             NodeBase node = clickedObject.GetComponent<NodeBase>();
 
-            node.NodeIsSelectect();
+            if(!GridManager.Instance._isTileSelected && node.tileUnit != null)
+                node.NodeIsMapped();
+            else if(GridManager.Instance._isTileSelected)
+                node.NodeIsSelectect();
         }
     }
 

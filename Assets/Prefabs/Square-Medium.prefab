@@ -102,7 +102,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5441756845999417297, guid: f779211c4413df540a96697ec9d4124b, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5799129059999396217, guid: f779211c4413df540a96697ec9d4124b, type: 3}
       propertyPath: m_Name
@@ -243,6 +243,8 @@ MonoBehaviour:
   _walkableColor: {r: 0.22191317, g: 0.6415094, b: 0.16642934, a: 1}
   _renderer: {fileID: 5786486164890501834}
   tileWalkValue: 3
+  tileUnit: {fileID: 0}
+  _isInRange: 0
   _fCostText: {fileID: 8533730656707827250}
   _gCostText: {fileID: 5177567095218452506}
   _hCostText: {fileID: 1169704227256592860}

@@ -20,6 +20,8 @@ namespace Pathfinding._Scripts.Grid {
         private NodeBase _playerNodeBase, _goalNodeBase;
         private Unit _spawnedPlayer, _spawnedGoal;
 
+        public bool _isTileSelected = false;
+
         private List<NodeBase> reacheableNodes = new List<NodeBase>();
 
         void Awake() => Instance = this;
@@ -56,7 +58,9 @@ namespace Pathfinding._Scripts.Grid {
             {
                 var path = Pathfinding.FindPath(_playerNodeBase, _goalNodeBase);
                 _spawnedPlayer.transform.position = _goalNodeBase.transform.position;
+                _playerNodeBase.tileUnit = null;
                 _playerNodeBase = _goalNodeBase;
+                _playerNodeBase.tileUnit = _spawnedPlayer;
             }
 
             ResetReachebleNodes();

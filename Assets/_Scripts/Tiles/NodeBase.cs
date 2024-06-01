@@ -1,3 +1,4 @@
+using Pathfinding._Scripts.Grid;
 using Pathfinding._Scripts.Units;
 using System;
 using System.Collections.Generic;
@@ -38,9 +39,8 @@ namespace Nodes.Tiles {
 
 
         public void NodeIsSelectect() {
-            print(Walkable);
-            print(_isInRange);
             if (!Walkable || !_isInRange) return;
+            GridManager.Instance._isTileSelected = false;
             OnSelectTile?.Invoke(this);
         }
 
@@ -48,6 +48,7 @@ namespace Nodes.Tiles {
         {
             if (!Walkable) return;
             _isInRange = true;
+            GridManager.Instance._isTileSelected = true;
             OnMappedTile?.Invoke(this);
         }
 
