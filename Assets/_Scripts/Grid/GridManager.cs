@@ -10,15 +10,16 @@ namespace Pathfinding._Scripts.Grid {
     public class GridManager : MonoBehaviour {
         public static GridManager Instance;
 
-        [SerializeField] private Sprite _playerSprite, _goalSprite;
         [SerializeField] private Unit _unitPrefab;
         [SerializeField] private ScriptableSquareGrid _scriptableGrid;
         [SerializeField] private bool _drawConnections;
 
         public Dictionary<Vector2, NodeBase> tiles { get; private set; }
 
-        private NodeBase _playerNodeBase, _goalNodeBase;
-        private Unit _spawnedPlayer, _spawnedGoal;
+        public List<Unit> _unitList = new List<Unit>();
+
+        private NodeBase _currentNode, _goalNodeBase;
+        private Unit _currentUnit;
 
         public bool _isTileSelected = false;
 
@@ -37,30 +38,29 @@ namespace Pathfinding._Scripts.Grid {
         }
         void SpawnUnits()
         {
-            _playerNodeBase = tiles.Where(t => t.Value.Walkable).OrderBy(t => Random.value).First().Value;
-            _spawnedPlayer = Instantiate(_unitPrefab, _playerNodeBase.Coords.Pos, Quaternion.identity);
-            _spawnedPlayer.Init(_playerSprite);
-            _playerNodeBase.tileUnit = _spawnedPlayer;
-
-            _spawnedGoal = Instantiate(_unitPrefab, new Vector3(50, 50, 50), Quaternion.identity);
-            _spawnedGoal.Init(_goalSprite);
+            foreach(Unit unit in _unitList)
+            {
+                NodeBase randomNode = tiles.Where(t => t.Value.Walkable).OrderBy(t => Random.value).First().Value;
+                Unit u = Instantiate(unit, randomNode.Coords.Pos, Quaternion.identity);
+                u.Init(unit._sprite);
+                randomNode.tileUnit = u;
+            }
         }
 
         private void OnDestroy() => NodeBase.OnSelectTile -= TileSelected;
 
         private void TileSelected(NodeBase nodeBase) {
             _goalNodeBase = nodeBase;
-            _spawnedGoal.transform.position = _goalNodeBase.Coords.Pos;
 
             foreach (var t in tiles.Values) t.RevertTile();
 
-            if (Pathfinding.IsReachableNodes(_playerNodeBase, 10).Contains(_goalNodeBase))
+            if (Pathfinding.IsReachableNodes(_currentNode, 10).Contains(_goalNodeBase))
             {
-                var path = Pathfinding.FindPath(_playerNodeBase, _goalNodeBase);
-                _spawnedPlayer.transform.position = _goalNodeBase.transform.position;
-                _playerNodeBase.tileUnit = null;
-                _playerNodeBase = _goalNodeBase;
-                _playerNodeBase.tileUnit = _spawnedPlayer;
+                var path = Pathfinding.FindPath(_currentNode, _goalNodeBase);
+                _currentUnit.transform.position = _goalNodeBase.transform.position;
+                _currentNode.tileUnit = null;
+                _currentNode = _goalNodeBase;
+                _currentNode.tileUnit = _currentUnit;
             }
 
             ResetReachebleNodes();
@@ -68,8 +68,8 @@ namespace Pathfinding._Scripts.Grid {
 
         private void TileMapped(NodeBase nodeBase)
         {
-            _goalNodeBase = nodeBase;
-            _spawnedGoal.transform.position = _goalNodeBase.Coords.Pos;
+            _currentNode = nodeBase;
+            _currentUnit = nodeBase.tileUnit;
 
             foreach (var t in tiles.Values) t.RevertTile();
 

@@ -31,9 +31,9 @@ public class GameplayManager : MonoBehaviour
             NodeBase node = clickedObject.GetComponent<NodeBase>();
 
             if(!GridManager.Instance._isTileSelected && node.tileUnit != null)
-                node.NodeIsMapped();
-            else if(GridManager.Instance._isTileSelected)
-                node.NodeIsSelectect();
+                node.NodeIsSelected();
+            else if(GridManager.Instance._isTileSelected && node.tileUnit == null)
+                node.NodeIsMoved();
         }
     }
 

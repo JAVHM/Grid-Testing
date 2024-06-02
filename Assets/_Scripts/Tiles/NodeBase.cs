@@ -38,13 +38,13 @@ namespace Nodes.Tiles {
         }
 
 
-        public void NodeIsSelectect() {
+        public void NodeIsMoved() {
             if (!Walkable || !_isInRange) return;
             GridManager.Instance._isTileSelected = false;
             OnSelectTile?.Invoke(this);
         }
 
-        public void NodeIsMapped()
+        public void NodeIsSelected()
         {
             if (!Walkable) return;
             _isInRange = true;

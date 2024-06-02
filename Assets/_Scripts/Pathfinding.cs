@@ -54,7 +54,7 @@ namespace Pathfinding._Scripts {
                     return path;
                 }
 
-                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t)))
+                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t.tileUnit == null && !processed.Contains(t)))
                 {
                     var inSearch = toSearch.Contains(neighbor);
 
@@ -96,7 +96,7 @@ namespace Pathfinding._Scripts {
                 current._isInRange = true;
                 reachableNodes.Add(current);
 
-                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t)))
+                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t.tileUnit == null && !processed.Contains(t)))
                 {
                     var costToNeighbor = currentCost + neighbor.tileWalkValue;
                     if (costToNeighbor <= maxCost)
@@ -127,7 +127,7 @@ namespace Pathfinding._Scripts {
 
                 reachableNodes.Add(current);
 
-                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t)))
+                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t.tileUnit == null && !processed.Contains(t)))
                 {
                     var costToNeighbor = currentCost + neighbor.tileWalkValue;
                     if (costToNeighbor <= maxCost)
@@ -168,7 +168,7 @@ namespace Pathfinding._Scripts {
                     var nextPos = current.Coords.Pos + direction;
                     var neighbor = GetNeighborAtPosition(nextPos);
 
-                    if (neighbor != null && neighbor.Walkable && !processed.Contains(neighbor))
+                    if (neighbor != null && neighbor.Walkable && neighbor.tileUnit == null && !processed.Contains(neighbor))
                     {
                         neighbor.SetColor(Color.red);
                         processed.Add(neighbor);
