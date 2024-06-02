@@ -76,6 +76,11 @@ namespace Pathfinding._Scripts.Grid {
             reacheableNodes = Pathfinding.MarkReachableNodes(nodeBase, 10);
         }
 
+        public void TestFourDirections(NodeBase nodeBase)
+        {
+            Pathfinding.MarkReachableNodesInFourDirections(nodeBase, 3);
+        }
+
         private void ResetReachebleNodes()
         {
             foreach(NodeBase n in reacheableNodes)

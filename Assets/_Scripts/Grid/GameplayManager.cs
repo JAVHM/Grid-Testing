@@ -48,7 +48,7 @@ public class GameplayManager : MonoBehaviour
 
             NodeBase node = clickedObject.GetComponent<NodeBase>();
 
-            node.NodeIsMapped();
+            GridManager.Instance.TestFourDirections(node);
         }
     }
 }

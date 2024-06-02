@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nodes.Tiles;
+using Pathfinding._Scripts.Grid;
 using UnityEngine;
 
 namespace Pathfinding._Scripts {
@@ -16,49 +17,56 @@ namespace Pathfinding._Scripts {
         private static readonly Color PathColor = new Color(0.65f, 0.35f, 0.35f);
         private static readonly Color OpenColor = new Color(.4f, .6f, .4f);
         private static readonly Color ClosedColor = new Color(0.35f, 0.4f, 0.5f);
-        
-        public static List<NodeBase> FindPath(NodeBase startNode, NodeBase targetNode) {
+
+        public static List<NodeBase> FindPath(NodeBase startNode, NodeBase targetNode)
+        {
             var toSearch = new List<NodeBase>() { startNode };
             var processed = new List<NodeBase>();
 
-            while (toSearch.Any()) {
+            while (toSearch.Any())
+            {
                 var current = toSearch[0];
-                foreach (var t in toSearch) 
+                foreach (var t in toSearch)
                     if (t.F < current.F || t.F == current.F && t.H < current.H) current = t;
 
                 processed.Add(current);
                 toSearch.Remove(current);
-                
+
                 current.SetColor(ClosedColor);
 
-                if (current == targetNode) {
+                if (current == targetNode)
+                {
                     var currentPathTile = targetNode;
                     var path = new List<NodeBase>();
                     var count = 100;
-                    while (currentPathTile != startNode) {
+                    while (currentPathTile != startNode)
+                    {
                         path.Add(currentPathTile);
                         currentPathTile = currentPathTile.Connection;
                         count--;
                         if (count < 0) throw new Exception();
                         Debug.Log("sdfsdf");
                     }
-                    
+
                     foreach (var tile in path) tile.SetColor(PathColor);
                     startNode.SetColor(PathColor);
                     Debug.Log(path.Count);
                     return path;
                 }
 
-                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t))) {
+                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && !processed.Contains(t)))
+                {
                     var inSearch = toSearch.Contains(neighbor);
 
                     var costToNeighbor = current.G + current.GetDistance(neighbor);
 
-                    if (!inSearch || costToNeighbor < neighbor.G) {
+                    if (!inSearch || costToNeighbor < neighbor.G)
+                    {
                         neighbor.SetG(costToNeighbor);
                         neighbor.SetConnection(current);
 
-                        if (!inSearch) {
+                        if (!inSearch)
+                        {
                             neighbor.SetH(neighbor.GetDistance(targetNode));
                             toSearch.Add(neighbor);
                             neighbor.SetColor(OpenColor);
@@ -102,7 +110,6 @@ namespace Pathfinding._Scripts {
             return reachableNodes;
         }
 
-
         public static List<NodeBase> IsReachableNodes(NodeBase startNode, int maxCost)
         {
             var toSearch = new Queue<(NodeBase node, float currentCost)>();
@@ -132,6 +139,48 @@ namespace Pathfinding._Scripts {
             }
 
             return reachableNodes;
+        }
+
+        public static void MarkReachableNodesInFourDirections(NodeBase startNode, int maxSteps)
+        {
+            var directions = new List<Vector2>
+            {
+                new Vector2(0, 1),  // Up
+                new Vector2(0, -1), // Down
+                new Vector2(1, 0),  // Right
+                new Vector2(-1, 0)  // Left
+            };
+
+            var processed = new HashSet<NodeBase>();
+
+            foreach (var direction in directions)
+            {
+                var toSearch = new Queue<(NodeBase node, int steps)>();
+                toSearch.Enqueue((startNode, 0));
+                processed.Add(startNode);
+
+                while (toSearch.Any())
+                {
+                    var (current, currentSteps) = toSearch.Dequeue();
+
+                    if (currentSteps >= maxSteps) continue;
+
+                    var nextPos = current.Coords.Pos + direction;
+                    var neighbor = GetNeighborAtPosition(nextPos);
+
+                    if (neighbor != null && neighbor.Walkable && !processed.Contains(neighbor))
+                    {
+                        neighbor.SetColor(Color.red);
+                        processed.Add(neighbor);
+                        toSearch.Enqueue((neighbor, currentSteps + 1));
+                    }
+                }
+            }
+        }
+
+        private static NodeBase GetNeighborAtPosition(Vector2 position)
+        {
+            return GridManager.Instance.GetTileAtPosition(position);
         }
     }
 }
