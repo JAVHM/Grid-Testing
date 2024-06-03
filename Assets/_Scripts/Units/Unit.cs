@@ -8,6 +8,7 @@ namespace Pathfinding._Scripts.Units {
         public Sprite _sprite;
         public bool _isNpc =  true;
         public int _movements;
+        public int _team;
 
         public void Init(Sprite sprite) {
             _renderer.sprite = sprite;

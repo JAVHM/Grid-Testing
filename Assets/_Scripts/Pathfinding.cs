@@ -177,14 +177,14 @@ namespace Pathfinding._Scripts
             return GridManager.Instance.GetTileAtPosition(position);
         }
 
-        public static List<NodeBase> FindNearestEnemyNode(NodeBase startNode, Unit[] units)
+        public static List<NodeBase> FindNearestEnemyNode(NodeBase startNode, Unit[] units, int team)
         {
             NodeBase targetNode = null;
             float minDistance = Mathf.Infinity;
 
             foreach (Unit unit in units)
             {
-                if(unit != startNode.tileUnit)
+                if(unit != startNode.tileUnit && unit._team != startNode.tileUnit._team)
                 {
                     float distance = Vector3.Distance(startNode.gameObject.transform.position, unit.transform.position);
                     if (distance < minDistance)
@@ -227,7 +227,7 @@ namespace Pathfinding._Scripts
                     return path;
                 }
 
-                foreach (var neighbor in current.Neighbors.Where(t => !processed.Contains(t)))
+                foreach (var neighbor in current.Neighbors.Where(t => (t.Walkable && t.tileUnit == null && !processed.Contains(t)) || t == targetNode))
                 {
                     var inSearch = toSearch.Contains(neighbor);
 

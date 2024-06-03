@@ -46,10 +46,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _renderer: {fileID: 5059227038317764067}
-  actualNode: {fileID: 0}
+  _actualNode: {fileID: 0}
   _sprite: {fileID: 21300000, guid: 96905eeec77649241b7da2750dfb29a6, type: 3}
   _isNpc: 1
   _movements: 5
+  _team: 2
 --- !u!1 &8230079914187428099
 GameObject:
   m_ObjectHideFlags: 0

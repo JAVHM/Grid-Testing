@@ -17,7 +17,6 @@ namespace Pathfinding._Scripts.Grid {
         public Dictionary<Vector2, NodeBase> tiles { get; private set; }
 
         public List<Unit> _unitList = new List<Unit>();
-        public List<Unit> _unitListInstance = new List<Unit>();
 
         private NodeBase _currentNode, _goalNodeBase;
         private Unit _currentUnit;
@@ -46,10 +45,7 @@ namespace Pathfinding._Scripts.Grid {
                 instanceUnit.Init(unit._sprite);
                 randomNode.tileUnit = instanceUnit;
                 instanceUnit._actualNode = randomNode;
-                if(instanceUnit._isNpc)
-                {
-                    UnitsManager.Instance.npcUnits.Add(instanceUnit);
-                }
+                UnitsManager.Instance.npcUnits.Add(instanceUnit);
             }
         }
 
