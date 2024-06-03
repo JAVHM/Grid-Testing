@@ -15,29 +15,22 @@ public class CameraController : MonoBehaviour
 
     void HandleMovement()
     {
-        // Get input axes for horizontal and vertical movement
         float moveX = Input.GetAxis("Horizontal");
         float moveY = Input.GetAxis("Vertical");
 
-        // Calculate the new position based on input and pan speed
         Vector3 newPosition = transform.position + new Vector3(moveX, moveY, 0) * panSpeed * Time.deltaTime;
 
-        // Update the camera's position
         transform.position = newPosition;
     }
 
     void HandleZoom()
     {
-        // Get the scroll wheel input
         float scroll = Input.GetAxis("Mouse ScrollWheel");
 
-        // Calculate the new orthographic size based on scroll input and zoom speed
         float newSize = Camera.main.orthographicSize - scroll * zoomSpeed;
 
-        // Clamp the new size to be within the min and max zoom levels
         newSize = Mathf.Clamp(newSize, minZoom, maxZoom);
 
-        // Update the camera's orthographic size
         Camera.main.orthographicSize = newSize;
     }
 }

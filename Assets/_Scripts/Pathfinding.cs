@@ -189,14 +189,11 @@ namespace Pathfinding._Scripts
                     float distance = Vector3.Distance(startNode.gameObject.transform.position, unit.transform.position);
                     if (distance < minDistance)
                     {
-                        targetNode = unit.actualNode;
+                        targetNode = unit._actualNode;
                         minDistance = distance;
                     }
                 }
             }
-
-            Debug.Log("From: " + startNode.gameObject.transform.position);
-            Debug.Log("To: " + targetNode.gameObject.transform.position);
 
             var toSearch = new List<NodeBase>() { startNode };
             var processed = new List<NodeBase>();

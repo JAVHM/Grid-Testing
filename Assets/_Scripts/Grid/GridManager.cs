@@ -45,7 +45,7 @@ namespace Pathfinding._Scripts.Grid {
                 Unit instanceUnit = Instantiate(unit, randomNode.Coords.Pos, Quaternion.identity);
                 instanceUnit.Init(unit._sprite);
                 randomNode.tileUnit = instanceUnit;
-                instanceUnit.actualNode = randomNode;
+                instanceUnit._actualNode = randomNode;
                 if(instanceUnit._isNpc)
                 {
                     UnitsManager.Instance.npcUnits.Add(instanceUnit);
@@ -62,14 +62,14 @@ namespace Pathfinding._Scripts.Grid {
 
             print(_goalNodeBase.gameObject.transform.position);
 
-            if (Pathfinding.IsReachableNodes(_currentNode, 10).Contains(_goalNodeBase))
+            if (Pathfinding.IsReachableNodes(_currentNode, _currentNode.tileUnit._movements).Contains(_goalNodeBase))
             {
                 var path = Pathfinding.FindPath(_currentNode, _goalNodeBase);
                 _currentUnit.transform.position = _goalNodeBase.transform.position;
                 _currentNode.tileUnit = null;
                 _currentNode = _goalNodeBase;
                 _currentNode.tileUnit = _currentUnit;
-                _currentNode.tileUnit.actualNode = _currentNode; 
+                _currentNode.tileUnit._actualNode = _currentNode; 
             }
 
             ResetReachebleNodes();
@@ -82,7 +82,7 @@ namespace Pathfinding._Scripts.Grid {
 
             foreach (var t in tiles.Values) t.RevertTile();
 
-            reacheableNodes = Pathfinding.MarkReachableNodes(nodeBase, 10);
+            reacheableNodes = Pathfinding.MarkReachableNodes(nodeBase, nodeBase.tileUnit._movements);
         }
 
         public void TestFourDirections(NodeBase nodeBase)
