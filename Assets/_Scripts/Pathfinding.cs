@@ -48,7 +48,7 @@ namespace Pathfinding._Scripts
                     return path;
                 }
 
-                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t.tileUnit == null && !processed.Contains(t)))
+                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t._tileUnit == null && !processed.Contains(t)))
                 {
                     var inSearch = toSearch.Contains(neighbor);
 
@@ -90,9 +90,9 @@ namespace Pathfinding._Scripts
                 current._isInRange = true;
                 reachableNodes.Add(current);
 
-                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t.tileUnit == null && !processed.Contains(t)))
+                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t._tileUnit == null && !processed.Contains(t)))
                 {
-                    var costToNeighbor = currentCost + neighbor.tileWalkValue;
+                    var costToNeighbor = currentCost + neighbor._tileWalkValue;
                     if (costToNeighbor <= maxCost)
                     {
                         processed.Add(neighbor);
@@ -121,9 +121,9 @@ namespace Pathfinding._Scripts
 
                 reachableNodes.Add(current);
 
-                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t.tileUnit == null && !processed.Contains(t)))
+                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t._tileUnit == null && !processed.Contains(t)))
                 {
-                    var costToNeighbor = currentCost + neighbor.tileWalkValue;
+                    var costToNeighbor = currentCost + neighbor._tileWalkValue;
                     if (costToNeighbor <= maxCost)
                     {
                         processed.Add(neighbor);
@@ -162,7 +162,7 @@ namespace Pathfinding._Scripts
                     var nextPos = current.Coords.Pos + direction;
                     var neighbor = GetNeighborAtPosition(nextPos);
 
-                    if (neighbor != null && neighbor.Walkable && neighbor.tileUnit == null && !processed.Contains(neighbor))
+                    if (neighbor != null && neighbor.Walkable && neighbor._tileUnit == null && !processed.Contains(neighbor))
                     {
                         neighbor.SetColor(Color.red);
                         processed.Add(neighbor);
@@ -184,7 +184,7 @@ namespace Pathfinding._Scripts
 
             foreach (Unit unit in units)
             {
-                if(unit != startNode.tileUnit && unit._team != startNode.tileUnit._team)
+                if(unit != startNode._tileUnit && unit._team != startNode._tileUnit._team)
                 {
                     float distance = Vector3.Distance(startNode.gameObject.transform.position, unit.transform.position);
                     if (distance < minDistance)
@@ -227,7 +227,7 @@ namespace Pathfinding._Scripts
                     return path;
                 }
 
-                foreach (var neighbor in current.Neighbors.Where(t => (t.Walkable && t.tileUnit == null && !processed.Contains(t)) || t == targetNode))
+                foreach (var neighbor in current.Neighbors.Where(t => (t.Walkable && t._tileUnit == null && !processed.Contains(t)) || t == targetNode))
                 {
                     var inSearch = toSearch.Contains(neighbor);
 

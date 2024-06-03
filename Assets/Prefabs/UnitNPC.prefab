@@ -49,7 +49,7 @@ MonoBehaviour:
   _actualNode: {fileID: 0}
   _sprite: {fileID: 21300000, guid: 96905eeec77649241b7da2750dfb29a6, type: 3}
   _isNpc: 1
-  _movements: 5
+  _movements: 10
   _team: 2
 --- !u!1 &8230079914187428099
 GameObject:

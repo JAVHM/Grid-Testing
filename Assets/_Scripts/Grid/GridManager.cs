@@ -43,7 +43,7 @@ namespace Pathfinding._Scripts.Grid {
                 NodeBase randomNode = tiles.Where(t => t.Value.Walkable).OrderBy(t => Random.value).First().Value;
                 Unit instanceUnit = Instantiate(unit, randomNode.Coords.Pos, Quaternion.identity);
                 instanceUnit.Init(unit._sprite);
-                randomNode.tileUnit = instanceUnit;
+                randomNode._tileUnit = instanceUnit;
                 instanceUnit._actualNode = randomNode;
                 UnitsManager.Instance.npcUnits.Add(instanceUnit);
             }
@@ -58,14 +58,14 @@ namespace Pathfinding._Scripts.Grid {
 
             print(_goalNodeBase.gameObject.transform.position);
 
-            if (Pathfinding.IsReachableNodes(_currentNode, _currentNode.tileUnit._movements).Contains(_goalNodeBase))
+            if (Pathfinding.IsReachableNodes(_currentNode, _currentNode._tileUnit._movements).Contains(_goalNodeBase))
             {
                 var path = Pathfinding.FindPath(_currentNode, _goalNodeBase);
                 _currentUnit.transform.position = _goalNodeBase.transform.position;
-                _currentNode.tileUnit = null;
+                _currentNode._tileUnit = null;
                 _currentNode = _goalNodeBase;
-                _currentNode.tileUnit = _currentUnit;
-                _currentNode.tileUnit._actualNode = _currentNode; 
+                _currentNode._tileUnit = _currentUnit;
+                _currentNode._tileUnit._actualNode = _currentNode; 
             }
 
             ResetReachebleNodes();
@@ -74,11 +74,11 @@ namespace Pathfinding._Scripts.Grid {
         private void TileMapped(NodeBase nodeBase)
         {
             _currentNode = nodeBase;
-            _currentUnit = nodeBase.tileUnit;
+            _currentUnit = nodeBase._tileUnit;
 
             foreach (var t in tiles.Values) t.RevertTile();
 
-            reacheableNodes = Pathfinding.MarkReachableNodes(nodeBase, nodeBase.tileUnit._movements);
+            reacheableNodes = Pathfinding.MarkReachableNodes(nodeBase, nodeBase._tileUnit._movements);
         }
 
         public void TestFourDirections(NodeBase nodeBase)

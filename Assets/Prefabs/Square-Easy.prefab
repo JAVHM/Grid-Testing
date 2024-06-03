@@ -274,7 +274,7 @@ MonoBehaviour:
   _obstacleColor: {r: 0, g: 0, b: 0, a: 0}
   _walkableColor: {r: 0.38374114, g: 0.8584906, b: 0.31990921, a: 1}
   _renderer: {fileID: 878748853961547397}
-  tileWalkValue: 1
+  _tileWalkValue: 1
   tileUnit: {fileID: 0}
   _isInRange: 0
   _fCostText: {fileID: 3031394508458969725}

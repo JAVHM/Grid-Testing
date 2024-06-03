@@ -13,8 +13,8 @@ namespace Nodes.Tiles {
         [SerializeField] private Color _obstacleColor;
         [SerializeField] private Color _walkableColor;
         [SerializeField] protected SpriteRenderer _renderer;
-        public int tileWalkValue;
-        public Unit tileUnit;
+        public int _tileWalkValue;
+        public Unit _tileUnit;
      
         public ICoords Coords;
         public float GetDistance(NodeBase other) => Coords.GetDistance(other.Coords); // Helper to reduce noise in pathfinding

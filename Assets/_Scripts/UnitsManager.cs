@@ -29,15 +29,18 @@ public class UnitsManager : MonoBehaviour
             {
                 NodeBase node = unit._actualNode;
                 List<NodeBase> path = Pathfinding._Scripts.Pathfinding.FindNearestEnemyNode(node, units, unit._team);
-                if(path.Count > 1)
+                if (path != null)
                 {
-                    yield return new WaitForSeconds(0.5f);
-                    node.NpcNodeIsSelected();
-                    yield return new WaitForSeconds(0.5f);
-                    if (path.Count <= unit._movements)
-                        path[path.Count - (path.Count - 1)].NodeIsMoved();
-                    else
-                        path[path.Count - unit._movements].NodeIsMoved();
+                    if (path.Count > 1)
+                    {
+                        yield return new WaitForSeconds(0.25f);
+                        node.NpcNodeIsSelected();
+                        yield return new WaitForSeconds(0.25f);
+                        if (path.Count <= unit._movements)
+                            path[path.Count - (path.Count - 1)].NodeIsMoved();
+                        else
+                            path[path.Count - unit._movements].NodeIsMoved();
+                    }
                 }
             }
         }
