@@ -37,14 +37,24 @@ namespace Nodes.Tiles {
             transform.position = Coords.Pos;
         }
 
-
         public void NodeIsMoved() {
+            print("a");
             if (!Walkable || !_isInRange) return;
+            
             GridManager.Instance._isTileSelected = false;
             OnSelectTile?.Invoke(this);
+            print("b");
         }
 
         public void NodeIsSelected()
+        {
+            if (!Walkable) return;
+            _isInRange = true;
+            GridManager.Instance._isTileSelected = true;
+            OnMappedTile?.Invoke(this);
+        }
+
+        public void NodeFindNearestUnit()
         {
             if (!Walkable) return;
             _isInRange = true;

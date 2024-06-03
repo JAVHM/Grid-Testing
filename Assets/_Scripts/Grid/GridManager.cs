@@ -17,6 +17,7 @@ namespace Pathfinding._Scripts.Grid {
         public Dictionary<Vector2, NodeBase> tiles { get; private set; }
 
         public List<Unit> _unitList = new List<Unit>();
+        public List<Unit> _unitListInstance = new List<Unit>();
 
         private NodeBase _currentNode, _goalNodeBase;
         private Unit _currentUnit;
@@ -41,9 +42,14 @@ namespace Pathfinding._Scripts.Grid {
             foreach(Unit unit in _unitList)
             {
                 NodeBase randomNode = tiles.Where(t => t.Value.Walkable).OrderBy(t => Random.value).First().Value;
-                Unit u = Instantiate(unit, randomNode.Coords.Pos, Quaternion.identity);
-                u.Init(unit._sprite);
-                randomNode.tileUnit = u;
+                Unit instanceUnit = Instantiate(unit, randomNode.Coords.Pos, Quaternion.identity);
+                instanceUnit.Init(unit._sprite);
+                randomNode.tileUnit = instanceUnit;
+                instanceUnit.actualNode = randomNode;
+                if(instanceUnit._isNpc)
+                {
+                    UnitsManager.Instance.npcUnits.Add(instanceUnit);
+                }
             }
         }
 
@@ -54,6 +60,8 @@ namespace Pathfinding._Scripts.Grid {
 
             foreach (var t in tiles.Values) t.RevertTile();
 
+            print(_goalNodeBase.gameObject.transform.position);
+
             if (Pathfinding.IsReachableNodes(_currentNode, 10).Contains(_goalNodeBase))
             {
                 var path = Pathfinding.FindPath(_currentNode, _goalNodeBase);
@@ -61,6 +69,7 @@ namespace Pathfinding._Scripts.Grid {
                 _currentNode.tileUnit = null;
                 _currentNode = _goalNodeBase;
                 _currentNode.tileUnit = _currentUnit;
+                _currentNode.tileUnit.actualNode = _currentNode; 
             }
 
             ResetReachebleNodes();
