@@ -56,9 +56,7 @@ namespace Pathfinding._Scripts.Grid {
 
             foreach (var t in tiles.Values) t.RevertTile();
 
-            print(_goalNodeBase.gameObject.transform.position);
-
-            if (Pathfinding.IsReachableNodes(_currentNode, _currentNode._tileUnit._movements).Contains(_goalNodeBase))
+            if (Pathfinding.IsReachableNodes(_currentNode, _currentNode._tileUnit._movements).Contains(_goalNodeBase) || UnitsManager.Instance.isNpcTurn)
             {
                 var path = Pathfinding.FindPath(_currentNode, _goalNodeBase);
                 _currentUnit.transform.position = _goalNodeBase.transform.position;

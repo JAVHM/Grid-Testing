@@ -38,21 +38,16 @@ namespace Nodes.Tiles {
         }
 
         public void NodeIsMoved() {
-            if (!Walkable || !_isInRange) return;
+            if (UnitsManager.Instance.isNpcTurn == false)
+                if (!Walkable || !_isInRange) return;
             GridManager.Instance._isTileSelected = false;
             OnSelectTile?.Invoke(this);
         }
 
         public void NodeIsSelected()
         {
-            if (!Walkable) return;
-            _isInRange = true;
-            GridManager.Instance._isTileSelected = true;
-            OnMappedTile?.Invoke(this);
-        }
-
-        public void NpcNodeIsSelected()
-        {
+            if(UnitsManager.Instance.isNpcTurn == false)
+                if (!Walkable) return;
             _isInRange = true;
             GridManager.Instance._isTileSelected = true;
             OnMappedTile?.Invoke(this);

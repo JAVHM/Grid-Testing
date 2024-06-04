@@ -28,8 +28,6 @@ namespace Pathfinding._Scripts
                 processed.Add(current);
                 toSearch.Remove(current);
 
-                current.SetColor(ClosedColor);
-
                 if (current == targetNode)
                 {
                     var currentPathTile = targetNode;
@@ -42,9 +40,6 @@ namespace Pathfinding._Scripts
                         count--;
                         if (count < 0) throw new Exception();
                     }
-
-                    foreach (var tile in path) tile.SetColor(PathColor);
-                    startNode.SetColor(PathColor);
                     return path;
                 }
 
@@ -52,7 +47,7 @@ namespace Pathfinding._Scripts
                 {
                     var inSearch = toSearch.Contains(neighbor);
 
-                    var costToNeighbor = current.G + current.GetDistance(neighbor);
+                    var costToNeighbor = current.G + current.GetDistance(neighbor) + current._tileWalkValue * 10;
 
                     if (!inSearch || costToNeighbor < neighbor.G)
                     {
@@ -63,7 +58,6 @@ namespace Pathfinding._Scripts
                         {
                             neighbor.SetH(neighbor.GetDistance(targetNode));
                             toSearch.Add(neighbor);
-                            neighbor.SetColor(OpenColor);
                         }
                     }
                 }
@@ -90,7 +84,7 @@ namespace Pathfinding._Scripts
                 current._isInRange = true;
                 reachableNodes.Add(current);
 
-                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t._tileUnit == null && !processed.Contains(t)))
+                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t._tileUnit == null))
                 {
                     var costToNeighbor = currentCost + neighbor._tileWalkValue;
                     if (costToNeighbor <= maxCost)
@@ -177,7 +171,7 @@ namespace Pathfinding._Scripts
             return GridManager.Instance.GetTileAtPosition(position);
         }
 
-        public static List<NodeBase> FindNearestEnemyNode(NodeBase startNode, Unit[] units, int team)
+        public static (List<NodeBase> path, List<int> costs) FindNearestEnemyNode(NodeBase startNode, Unit[] units, int team)
         {
             NodeBase targetNode = null;
             float minDistance = Mathf.Infinity;
@@ -213,25 +207,37 @@ namespace Pathfinding._Scripts
                 {
                     var currentPathTile = targetNode;
                     var path = new List<NodeBase>();
+                    var costs = new List<int>();
+                    var acumCosts = new List<int>();
                     var count = 100;
+                    var acumCost = 0;
                     while (currentPathTile != startNode)
                     {
                         path.Add(currentPathTile);
+                        costs.Add(currentPathTile._tileWalkValue);
                         currentPathTile = currentPathTile.Connection;
                         count--;
                         if (count < 0) throw new Exception();
                     }
 
+                    costs.Reverse();
+                    foreach(int c in costs)
+                    {
+                        acumCost += c;
+                        acumCosts.Add(acumCost);
+                        Debug.Log(acumCost);
+                    }
+
                     foreach (var tile in path) tile.SetColor(PathColor);
                     startNode.SetColor(PathColor);
-                    return path;
+                    return (path, acumCosts);
                 }
 
                 foreach (var neighbor in current.Neighbors.Where(t => (t.Walkable && t._tileUnit == null && !processed.Contains(t)) || t == targetNode))
                 {
                     var inSearch = toSearch.Contains(neighbor);
 
-                    var costToNeighbor = current.G + current.GetDistance(neighbor);
+                    var costToNeighbor = current.G + current.GetDistance(neighbor) + current._tileWalkValue * 10;
 
                     if (!inSearch || costToNeighbor < neighbor.G)
                     {
@@ -247,7 +253,7 @@ namespace Pathfinding._Scripts
                     }
                 }
             }
-            return null;
+            return (null, null);
         }
     }
 }

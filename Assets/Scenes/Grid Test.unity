@@ -294,7 +294,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7341151215538218331, guid: 3e2b3382004a71946925a3e0938c28e2, type: 3}
       propertyPath: _unitList.Array.size
-      value: 4
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7341151215538218331, guid: 3e2b3382004a71946925a3e0938c28e2, type: 3}
       propertyPath: _unitList.Array.data[0]
@@ -351,6 +351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   npcUnits: []
+  isNpcTurn: 0
 --- !u!4 &1687028033
 Transform:
   m_ObjectHideFlags: 0
