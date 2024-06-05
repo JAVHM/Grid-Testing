@@ -67,16 +67,19 @@ namespace Pathfinding._Scripts
 
         public static List<NodeBase> MarkReachableNodes(NodeBase startNode, int maxCost)
         {
-            var toSearch = new Queue<(NodeBase node, float currentCost)>();
+            var toSearch = new SortedSet<(float cost, NodeBase node)>(Comparer<(float cost, NodeBase node)>.Create((a, b) =>
+                a.cost == b.cost ? a.node.GetHashCode().CompareTo(b.node.GetHashCode()) : a.cost.CompareTo(b.cost)));
             var processed = new HashSet<NodeBase>();
             var reachableNodes = new List<NodeBase>();
+            var nodeCosts = new Dictionary<NodeBase, float> { { startNode, 0 } };
 
-            toSearch.Enqueue((startNode, 0));
+            toSearch.Add((0, startNode));
             processed.Add(startNode);
 
             while (toSearch.Any())
             {
-                var (current, currentCost) = toSearch.Dequeue();
+                var (currentCost, current) = toSearch.Min;
+                toSearch.Remove(toSearch.Min);
 
                 if (currentCost > maxCost) continue;
 
@@ -87,10 +90,14 @@ namespace Pathfinding._Scripts
                 foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t._tileUnit == null))
                 {
                     var costToNeighbor = currentCost + neighbor._tileWalkValue;
-                    if (costToNeighbor <= maxCost)
+
+                    if (!nodeCosts.ContainsKey(neighbor) || costToNeighbor < nodeCosts[neighbor])
                     {
-                        processed.Add(neighbor);
-                        toSearch.Enqueue((neighbor, costToNeighbor));
+                        nodeCosts[neighbor] = costToNeighbor;
+                        if (processed.Add(neighbor))
+                        {
+                            toSearch.Add((costToNeighbor, neighbor));
+                        }
                     }
                 }
             }
@@ -100,34 +107,42 @@ namespace Pathfinding._Scripts
 
         public static List<NodeBase> IsReachableNodes(NodeBase startNode, int maxCost)
         {
-            var toSearch = new Queue<(NodeBase node, float currentCost)>();
+            var toSearch = new SortedSet<(float cost, NodeBase node)>(Comparer<(float cost, NodeBase node)>.Create((a, b) =>
+                a.cost == b.cost ? a.node.GetHashCode().CompareTo(b.node.GetHashCode()) : a.cost.CompareTo(b.cost)));
             var processed = new HashSet<NodeBase>();
             var reachableNodes = new List<NodeBase>();
+            var nodeCosts = new Dictionary<NodeBase, float> { { startNode, 0 } };
 
-            toSearch.Enqueue((startNode, 0));
+            toSearch.Add((0, startNode));
             processed.Add(startNode);
 
             while (toSearch.Any())
             {
-                var (current, currentCost) = toSearch.Dequeue();
+                var (currentCost, current) = toSearch.Min;
+                toSearch.Remove(toSearch.Min);
 
                 if (currentCost > maxCost) continue;
 
                 reachableNodes.Add(current);
 
-                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t._tileUnit == null && !processed.Contains(t)))
+                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t._tileUnit == null))
                 {
                     var costToNeighbor = currentCost + neighbor._tileWalkValue;
-                    if (costToNeighbor <= maxCost)
+
+                    if (!nodeCosts.ContainsKey(neighbor) || costToNeighbor < nodeCosts[neighbor])
                     {
-                        processed.Add(neighbor);
-                        toSearch.Enqueue((neighbor, costToNeighbor));
+                        nodeCosts[neighbor] = costToNeighbor;
+                        if (processed.Add(neighbor))
+                        {
+                            toSearch.Add((costToNeighbor, neighbor));
+                        }
                     }
                 }
             }
 
             return reachableNodes;
         }
+
 
         public static void MarkReachableNodesInFourDirections(NodeBase startNode, int maxSteps)
         {
