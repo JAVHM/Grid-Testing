@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Nodes.Tiles;
@@ -21,7 +22,7 @@ namespace Pathfinding._Scripts.Grid {
         private NodeBase _currentNode, _goalNodeBase;
         private Unit _currentUnit;
 
-        public bool _isTileSelected = false;
+        public bool _isTileMoved = false;
 
         private List<NodeBase> reacheableNodes = new List<NodeBase>();
 
@@ -51,22 +52,63 @@ namespace Pathfinding._Scripts.Grid {
 
         private void OnDestroy() => NodeBase.OnSelectTile -= TileSelected;
 
-        private void TileSelected(NodeBase nodeBase) {
+        private void TileSelected(NodeBase nodeBase)
+        {
             _goalNodeBase = nodeBase;
 
             foreach (var t in tiles.Values) t.RevertTile();
 
             if (Pathfinding.IsReachableNodes(_currentNode, _currentNode._tileUnit._movements).Contains(_goalNodeBase) || UnitsManager.Instance.isNpcTurn)
             {
-                var path = Pathfinding.FindPath(_currentNode, _goalNodeBase);
-                _currentUnit.transform.position = _goalNodeBase.transform.position;
-                _currentNode._tileUnit = null;
-                _currentNode = _goalNodeBase;
-                _currentNode._tileUnit = _currentUnit;
-                _currentNode._tileUnit._actualNode = _currentNode; 
+                List<NodeBase> path = Pathfinding.FindPath(_currentNode, _goalNodeBase);
+
+                if (path != null && path.Count > 0)
+                {
+                    // Reverse the path in place
+                    path.Reverse();
+
+                    // Iniciar la corrutina de movimiento
+                    StartCoroutine(MoveUnitAlongPath(path));
+                }
             }
 
             ResetReachebleNodes();
+        }
+
+
+        private IEnumerator MoveUnitAlongPath(List<NodeBase> path)
+        {
+            // Asumimos que el primer nodo es el nodo actual y lo removemos de la lista
+            path.RemoveAt(0);
+
+            var unitMover = _currentUnit.GetComponent<UnitMover>();
+
+            // Mueve la unidad a través de los nodos en el camino
+            yield return StartCoroutine(unitMover.MoveAlongPath(path, 10f)); // Puedes ajustar la velocidad a tu gusto
+
+            // Actualiza la posición final de la unidad
+            _currentUnit.transform.position = _goalNodeBase.transform.position;
+            _currentNode._tileUnit = null;
+            _currentNode = _goalNodeBase;
+            _currentNode._tileUnit = _currentUnit;
+            _currentNode._tileUnit._actualNode = _currentNode;
+        }
+
+        public IEnumerator MoveAlongPath(List<NodeBase> path, float speed)
+        {
+            foreach (var node in path)
+            {
+                Vector3 startPosition = transform.position;
+                Vector3 endPosition = node.transform.position;
+                float journey = 0f;
+
+                while (journey < 1f)
+                {
+                    journey += Time.deltaTime * speed;
+                    transform.position = Vector3.Lerp(startPosition, endPosition, journey);
+                    yield return null;
+                }
+            }
         }
 
         private void TileMapped(NodeBase nodeBase)

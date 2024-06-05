@@ -40,7 +40,7 @@ namespace Nodes.Tiles {
         public void NodeIsMoved() {
             if (UnitsManager.Instance.isNpcTurn == false)
                 if (!Walkable || !_isInRange) return;
-            GridManager.Instance._isTileSelected = false;
+            GridManager.Instance._isTileMoved = false;
             OnSelectTile?.Invoke(this);
         }
 
@@ -49,7 +49,7 @@ namespace Nodes.Tiles {
             if(UnitsManager.Instance.isNpcTurn == false)
                 if (!Walkable) return;
             _isInRange = true;
-            GridManager.Instance._isTileSelected = true;
+            GridManager.Instance._isTileMoved = true;
             OnMappedTile?.Invoke(this);
         }
 
@@ -57,7 +57,7 @@ namespace Nodes.Tiles {
         {
             if (!Walkable) return;
             _isInRange = true;
-            GridManager.Instance._isTileSelected = true;
+            GridManager.Instance._isTileMoved = true;
             OnMappedTile?.Invoke(this);
         }
 

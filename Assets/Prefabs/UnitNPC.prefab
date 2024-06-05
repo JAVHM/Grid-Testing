@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6204243467155239428}
   - component: {fileID: 2363439576862928994}
+  - component: {fileID: 6304344872348161565}
   m_Layer: 0
   m_Name: UnitNPC
   m_TagString: Untagged
@@ -49,8 +50,20 @@ MonoBehaviour:
   _actualNode: {fileID: 0}
   _sprite: {fileID: 21300000, guid: 96905eeec77649241b7da2750dfb29a6, type: 3}
   _isNpc: 1
-  _movements: 4
+  _movements: 10
   _team: 2
+--- !u!114 &6304344872348161565
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6527333948962158337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b68f76c0b70e6c741b36a65ee207ddec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8230079914187428099
 GameObject:
   m_ObjectHideFlags: 0
