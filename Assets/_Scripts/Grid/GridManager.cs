@@ -78,15 +78,12 @@ namespace Pathfinding._Scripts.Grid {
 
         private IEnumerator MoveUnitAlongPath(List<NodeBase> path)
         {
-            // Asumimos que el primer nodo es el nodo actual y lo removemos de la lista
             path.RemoveAt(0);
 
             var unitMover = _currentUnit.GetComponent<UnitMover>();
 
-            // Mueve la unidad a través de los nodos en el camino
-            yield return StartCoroutine(unitMover.MoveAlongPath(path, 10f)); // Puedes ajustar la velocidad a tu gusto
+            yield return StartCoroutine(unitMover.MoveAlongPath(path, 25f));
 
-            // Actualiza la posición final de la unidad
             _currentUnit.transform.position = _goalNodeBase.transform.position;
             _currentNode._tileUnit = null;
             _currentNode = _goalNodeBase;

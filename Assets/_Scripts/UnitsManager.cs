@@ -35,9 +35,9 @@ public class UnitsManager : MonoBehaviour
                 {
                     if (path.Count > 1)
                     {
-                        yield return new WaitForSeconds(2f);
+                        yield return new WaitForSeconds(1f);
                         node.NodeIsSelected();
-                        yield return new WaitForSeconds(2f);
+                        yield return new WaitForSeconds(1f);
                         if (costs[costs.Count - 2] <= unit._movements)
                             path[path.Count - (path.Count - 1)].NodeIsMoved();
                         else
@@ -55,6 +55,7 @@ public class UnitsManager : MonoBehaviour
                     }
                 }
             }
+            yield return new WaitForSeconds(.5f);
         }
         isNpcTurn = false;
     }
