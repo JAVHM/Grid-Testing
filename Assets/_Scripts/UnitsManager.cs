@@ -9,7 +9,6 @@ public class UnitsManager : MonoBehaviour
 {
     public static UnitsManager Instance;
     public List<Unit> npcUnits = new List<Unit>();
-    public bool isNpcTurn = false;
 
     void Awake() => Instance = this;
     void Update()
@@ -22,7 +21,7 @@ public class UnitsManager : MonoBehaviour
 
     IEnumerator Test()
     {
-        isNpcTurn = true;
+        GridManager.Instance._isNpcTurn = true;
         Unit[] units = FindObjectsOfType<Unit>(); 
 
         foreach (Unit unit in npcUnits) 
@@ -35,9 +34,9 @@ public class UnitsManager : MonoBehaviour
                 {
                     if (path.Count > 1)
                     {
-                        yield return new WaitForSeconds(1f);
+                        yield return new WaitForSeconds(0.25f);
                         node.NodeIsSelected();
-                        yield return new WaitForSeconds(1f);
+                        yield return new WaitForSeconds(0.25f);
                         if (costs[costs.Count - 2] <= unit._movements)
                             path[path.Count - (path.Count - 1)].NodeIsMoved();
                         else
@@ -57,6 +56,6 @@ public class UnitsManager : MonoBehaviour
             }
             yield return new WaitForSeconds(.5f);
         }
-        isNpcTurn = false;
+        GridManager.Instance._isNpcTurn = false;
     }
 }

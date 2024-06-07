@@ -8,14 +8,17 @@ public class GameplayManager : MonoBehaviour
 {
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if(!GridManager.Instance._isNpcTurn && !GridManager.Instance._isUnitMoving)
         {
-            HandleClick(0);
-        }
+            if (Input.GetMouseButtonDown(0))
+            {
+                HandleClick(0);
+            }
 
-        if (Input.GetMouseButtonDown(1))
-        {
-            HandleClick2(0);
+            if (Input.GetMouseButtonDown(1))
+            {
+                HandleClick2(0);
+            }
         }
     }
 
@@ -30,9 +33,9 @@ public class GameplayManager : MonoBehaviour
 
             NodeBase node = clickedObject.GetComponent<NodeBase>();
 
-            if(!GridManager.Instance._isTileMoved && node._tileUnit != null)
+            if(node._tileUnit != null)
                 node.NodeIsSelected();
-            else if(GridManager.Instance._isTileMoved && node._tileUnit == null)
+            else if(node._tileUnit == null)
                 node.NodeIsMoved();
         }
     }

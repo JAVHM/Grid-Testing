@@ -23,6 +23,8 @@ namespace Pathfinding._Scripts.Grid {
         private Unit _currentUnit;
 
         public bool _isTileMoved = false;
+        public bool _isNpcTurn = false;
+        public bool _isUnitMoving = false;
 
         private List<NodeBase> reacheableNodes = new List<NodeBase>();
 
@@ -54,11 +56,12 @@ namespace Pathfinding._Scripts.Grid {
 
         private void TileSelected(NodeBase nodeBase)
         {
+            _isUnitMoving = true;
             _goalNodeBase = nodeBase;
 
             foreach (var t in tiles.Values) t.RevertTile();
 
-            if (Pathfinding.IsReachableNodes(_currentNode, _currentNode._tileUnit._movements).Contains(_goalNodeBase) || UnitsManager.Instance.isNpcTurn)
+            if (Pathfinding.IsReachableNodes(_currentNode, _currentNode._tileUnit._movements).Contains(_goalNodeBase) || _isNpcTurn)
             {
                 List<NodeBase> path = Pathfinding.FindPath(_currentNode, _goalNodeBase);
 
@@ -82,13 +85,14 @@ namespace Pathfinding._Scripts.Grid {
 
             var unitMover = _currentUnit.GetComponent<UnitMover>();
 
-            yield return StartCoroutine(unitMover.MoveAlongPath(path, 25f));
+            yield return StartCoroutine(unitMover.MoveAlongPath(path, 50f));
 
             _currentUnit.transform.position = _goalNodeBase.transform.position;
             _currentNode._tileUnit = null;
             _currentNode = _goalNodeBase;
             _currentNode._tileUnit = _currentUnit;
             _currentNode._tileUnit._actualNode = _currentNode;
+            _isUnitMoving = false;
         }
 
         public IEnumerator MoveAlongPath(List<NodeBase> path, float speed)
