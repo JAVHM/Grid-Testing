@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b4fcc98929314f448c74ecd52d892b0, type: 3}
   m_Name: Square Grid
   m_EditorClassIdentifier: 
-  _gridWidth: 25
-  _gridHeight: 25
+  _gridWidth: 35
+  _gridHeight: 35
   nodeBasePrefabs:
-  - {fileID: 1263727174166914258, guid: 060835d03b849954587adde059cef48d, type: 3}
-  - {fileID: 1263727174166914258, guid: 060835d03b849954587adde059cef48d, type: 3}
-  - {fileID: 1263727174166914258, guid: 060835d03b849954587adde059cef48d, type: 3}
-  - {fileID: 1263727174166914258, guid: 060835d03b849954587adde059cef48d, type: 3}
-  _obstacleWeight: 0
+  - {fileID: 1713175213529312491, guid: 7d080b35862b255438a7d74e55b98bc5, type: 3}
+  - {fileID: 5986928440720112757, guid: b46c06f24a739f14c8872ce24eaa826a, type: 3}
+  - {fileID: 5986928440720112757, guid: b46c06f24a739f14c8872ce24eaa826a, type: 3}
+  _obstacleWeight: 3
