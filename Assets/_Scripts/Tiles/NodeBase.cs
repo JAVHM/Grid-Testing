@@ -6,8 +6,10 @@ using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Nodes.Tiles {
-    public abstract class NodeBase : MonoBehaviour {
+namespace Nodes.Tiles
+{
+    public abstract class NodeBase : MonoBehaviour, IComparable<NodeBase>
+    {
         [Header("References")]
 
         [SerializeField] private Color _obstacleColor;
@@ -15,7 +17,7 @@ namespace Nodes.Tiles {
         [SerializeField] protected SpriteRenderer _renderer;
         public int _tileWalkValue;
         public Unit _tileUnit;
-     
+
         public ICoords Coords;
         public float GetDistance(NodeBase other) => Coords.GetDistance(other.Coords); // Helper to reduce noise in pathfinding
         public bool Walkable { get; private set; }
@@ -26,7 +28,8 @@ namespace Nodes.Tiles {
 
         public bool _isInRange = false;
 
-        public virtual void Init(bool walkable, ICoords coords) {
+        public virtual void Init(bool walkable, ICoords coords)
+        {
             Walkable = walkable;
 
             _renderer.color = walkable ? _walkableColor : _obstacleColor;
@@ -37,8 +40,8 @@ namespace Nodes.Tiles {
             transform.position = Coords.Pos;
         }
 
-        public void NodeIsMoved() {
-            print(GridManager.Instance._isNpcTurn);
+        public void NodeIsMoved()
+        {
             if (GridManager.Instance._isNpcTurn == false)
                 if (!Walkable || !_isInRange) return;
             GridManager.Instance._isTileMoved = false;
@@ -47,7 +50,7 @@ namespace Nodes.Tiles {
 
         public void NodeIsSelected()
         {
-            if(GridManager.Instance._isNpcTurn == false)
+            if (GridManager.Instance._isNpcTurn == false)
                 if (!Walkable) return;
             _isInRange = true;
             GridManager.Instance._isTileMoved = true;
@@ -64,7 +67,8 @@ namespace Nodes.Tiles {
 
         #region Pathfinding
 
-        [Header("Pathfinding")] [SerializeField]
+        [Header("Pathfinding")]
+        [SerializeField]
         private TextMeshPro _fCostText;
 
         [SerializeField] private TextMeshPro _gCostText, _hCostText;
@@ -76,21 +80,25 @@ namespace Nodes.Tiles {
 
         public abstract void CacheNeighbors();
 
-        public void SetConnection(NodeBase nodeBase) {
+        public void SetConnection(NodeBase nodeBase)
+        {
             Connection = nodeBase;
         }
 
-        public void SetG(float g) {
+        public void SetG(float g)
+        {
             G = g;
             SetText();
         }
 
-        public void SetH(float h) {
+        public void SetH(float h)
+        {
             H = h;
             SetText();
         }
 
-        private void SetText() {
+        private void SetText()
+        {
             _gCostText.text = G.ToString();
             _hCostText.text = H.ToString();
             _fCostText.text = F.ToString();
@@ -98,19 +106,30 @@ namespace Nodes.Tiles {
 
         public void SetColor(Color color) => _renderer.color = color;
 
-        public void RevertTile() {
+        public void RevertTile()
+        {
             _renderer.color = _defaultColor;
             _gCostText.text = "";
             _hCostText.text = "";
             _fCostText.text = "";
         }
 
+        public int CompareTo(NodeBase other)
+        {
+            int compare = F.CompareTo(other.F);
+            if (compare == 0)
+            {
+                compare = H.CompareTo(other.H);
+            }
+            return compare;
+        }
+
         #endregion
     }
 }
 
-
-public interface ICoords {
+public interface ICoords
+{
     public float GetDistance(ICoords other);
     public Vector2 Pos { get; set; }
 }

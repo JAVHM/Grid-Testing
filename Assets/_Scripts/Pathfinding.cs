@@ -16,17 +16,15 @@ namespace Pathfinding._Scripts
 
         public static List<NodeBase> FindPath(NodeBase startNode, NodeBase targetNode)
         {
-            var toSearch = new List<NodeBase>() { startNode };
-            var processed = new List<NodeBase>();
+            var toSearch = new MinHeap<NodeBase>();
+            toSearch.Add(startNode);
+            var processed = new HashSet<NodeBase>();
 
-            while (toSearch.Any())
+            while (toSearch.Count > 0)
             {
-                var current = toSearch[0];
-                foreach (var t in toSearch)
-                    if (t.F < current.F || t.F == current.F && t.H < current.H) current = t;
+                var current = toSearch.RemoveMin();
 
                 processed.Add(current);
-                toSearch.Remove(current);
 
                 if (current == targetNode)
                 {
@@ -40,6 +38,7 @@ namespace Pathfinding._Scripts
                         count--;
                         if (count < 0) throw new Exception();
                     }
+                    path.Reverse();
                     return path;
                 }
 
@@ -64,6 +63,8 @@ namespace Pathfinding._Scripts
             }
             return null;
         }
+
+
 
         public static List<NodeBase> MarkReachableNodes(NodeBase startNode, int maxCost)
         {
@@ -240,7 +241,6 @@ namespace Pathfinding._Scripts
                     {
                         acumCost += c;
                         acumCosts.Add(acumCost);
-                        Debug.Log(acumCost);
                     }
 
                     foreach (var tile in path) tile.SetColor(PathColor);
@@ -271,4 +271,82 @@ namespace Pathfinding._Scripts
             return (null, null);
         }
     }
+}
+
+public class MinHeap<T> where T : IComparable<T>
+{
+    private List<T> _elements = new List<T>();
+
+    public int Count => _elements.Count;
+
+    public T Peek()
+    {
+        if (Count == 0)
+            throw new InvalidOperationException("Heap is empty.");
+        return _elements[0];
+    }
+
+    public void Add(T item)
+    {
+        _elements.Add(item);
+        HeapifyUp(_elements.Count - 1);
+    }
+
+    public T RemoveMin()
+    {
+        if (Count == 0)
+            throw new InvalidOperationException("Heap is empty.");
+
+        var min = _elements[0];
+        _elements[0] = _elements[_elements.Count - 1];
+        _elements.RemoveAt(_elements.Count - 1);
+
+        HeapifyDown(0);
+        return min;
+    }
+
+    public bool Contains(T item)
+    {
+        return _elements.Contains(item);
+    }
+
+    private void HeapifyUp(int index)
+    {
+        while (index > 0 && _elements[index].CompareTo(_elements[Parent(index)]) < 0)
+        {
+            Swap(index, Parent(index));
+            index = Parent(index);
+        }
+    }
+
+    private void HeapifyDown(int index)
+    {
+        while (LeftChild(index) < _elements.Count)
+        {
+            int smallerChildIndex = LeftChild(index);
+            if (RightChild(index) < _elements.Count && _elements[RightChild(index)].CompareTo(_elements[LeftChild(index)]) < 0)
+            {
+                smallerChildIndex = RightChild(index);
+            }
+
+            if (_elements[index].CompareTo(_elements[smallerChildIndex]) < 0)
+            {
+                break;
+            }
+
+            Swap(index, smallerChildIndex);
+            index = smallerChildIndex;
+        }
+    }
+
+    private void Swap(int index1, int index2)
+    {
+        var temp = _elements[index1];
+        _elements[index1] = _elements[index2];
+        _elements[index2] = temp;
+    }
+
+    private int Parent(int index) => (index - 1) / 2;
+    private int LeftChild(int index) => 2 * index + 1;
+    private int RightChild(int index) => 2 * index + 2;
 }

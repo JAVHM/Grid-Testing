@@ -43,7 +43,7 @@ namespace Pathfinding._Scripts.Grid {
         {
             foreach(Unit unit in _unitList)
             {
-                NodeBase randomNode = tiles.Where(t => t.Value.Walkable).OrderBy(t => Random.value).First().Value;
+                NodeBase randomNode = tiles.Where(t => t.Value.Walkable && t.Value._tileUnit == null).OrderBy(t => Random.value).First().Value;
                 Unit instanceUnit = Instantiate(unit, randomNode.Coords.Pos, Quaternion.identity);
                 instanceUnit.Init(unit._sprite);
                 randomNode._tileUnit = instanceUnit;
@@ -67,9 +67,6 @@ namespace Pathfinding._Scripts.Grid {
 
                 if (path != null && path.Count > 0)
                 {
-                    // Reverse the path in place
-                    path.Reverse();
-
                     // Iniciar la corrutina de movimiento
                     StartCoroutine(MoveUnitAlongPath(path));
                 }

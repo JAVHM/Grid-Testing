@@ -13,7 +13,7 @@ public class UnitsManager : MonoBehaviour
     void Awake() => Instance = this;
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && !GridManager.Instance._isNpcTurn)
         {
             StartCoroutine(Test());
         }
