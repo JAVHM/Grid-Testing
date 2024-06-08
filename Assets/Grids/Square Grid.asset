@@ -16,6 +16,4 @@ MonoBehaviour:
   _gridHeight: 35
   nodeBasePrefabs:
   - {fileID: 1713175213529312491, guid: 7d080b35862b255438a7d74e55b98bc5, type: 3}
-  - {fileID: 5986928440720112757, guid: b46c06f24a739f14c8872ce24eaa826a, type: 3}
-  - {fileID: 5986928440720112757, guid: b46c06f24a739f14c8872ce24eaa826a, type: 3}
-  _obstacleWeight: 3
+  _obstacleWeight: 0

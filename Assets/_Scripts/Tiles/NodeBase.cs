@@ -20,17 +20,18 @@ namespace Nodes.Tiles
 
         public ICoords Coords;
         public float GetDistance(NodeBase other) => Coords.GetDistance(other.Coords); // Helper to reduce noise in pathfinding
-        public bool Walkable { get; private set; }
+        public bool _isWalkable { get; private set; }
         private Color _defaultColor;
 
+        public static event Action<NodeBase> OnMoveTile;
         public static event Action<NodeBase> OnSelectTile;
-        public static event Action<NodeBase> OnMappedTile;
+        public static event Action<NodeBase> OnUnselectTile;
 
         public bool _isInRange = false;
 
         public virtual void Init(bool walkable, ICoords coords)
         {
-            Walkable = walkable;
+            _isWalkable = walkable;
 
             _renderer.color = walkable ? _walkableColor : _obstacleColor;
 
@@ -42,27 +43,29 @@ namespace Nodes.Tiles
 
         public void NodeIsMoved()
         {
-            if (GridManager.Instance._isNpcTurn == false)
-                if (!Walkable || !_isInRange) return;
             GridManager.Instance._isTileMoved = false;
-            OnSelectTile?.Invoke(this);
+            OnMoveTile?.Invoke(this);
         }
 
         public void NodeIsSelected()
         {
-            if (GridManager.Instance._isNpcTurn == false)
-                if (!Walkable) return;
             _isInRange = true;
             GridManager.Instance._isTileMoved = true;
-            OnMappedTile?.Invoke(this);
+            OnSelectTile?.Invoke(this);
+        }
+
+        public void NodeIsUnselected()
+        {
+            GridManager.Instance._isTileMoved = false;
+            OnUnselectTile?.Invoke(this);
         }
 
         public void NodeFindNearestUnit()
         {
-            if (!Walkable) return;
+            if (!_isWalkable) return;
             _isInRange = true;
             GridManager.Instance._isTileMoved = true;
-            OnMappedTile?.Invoke(this);
+            OnSelectTile?.Invoke(this);
         }
 
         #region Pathfinding

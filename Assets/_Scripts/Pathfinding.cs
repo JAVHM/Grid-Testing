@@ -42,7 +42,7 @@ namespace Pathfinding._Scripts
                     return path;
                 }
 
-                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t._tileUnit == null && !processed.Contains(t)))
+                foreach (var neighbor in current.Neighbors.Where(t => t._isWalkable && t._tileUnit == null && !processed.Contains(t)))
                 {
                     var inSearch = toSearch.Contains(neighbor);
 
@@ -88,7 +88,7 @@ namespace Pathfinding._Scripts
                 current._isInRange = true;
                 reachableNodes.Add(current);
 
-                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t._tileUnit == null))
+                foreach (var neighbor in current.Neighbors.Where(t => t._isWalkable && t._tileUnit == null))
                 {
                     var costToNeighbor = currentCost + neighbor._tileWalkValue;
 
@@ -126,7 +126,7 @@ namespace Pathfinding._Scripts
 
                 reachableNodes.Add(current);
 
-                foreach (var neighbor in current.Neighbors.Where(t => t.Walkable && t._tileUnit == null))
+                foreach (var neighbor in current.Neighbors.Where(t => t._isWalkable && t._tileUnit == null))
                 {
                     var costToNeighbor = currentCost + neighbor._tileWalkValue;
 
@@ -172,7 +172,7 @@ namespace Pathfinding._Scripts
                     var nextPos = current.Coords.Pos + direction;
                     var neighbor = GetNeighborAtPosition(nextPos);
 
-                    if (neighbor != null && neighbor.Walkable && neighbor._tileUnit == null && !processed.Contains(neighbor))
+                    if (neighbor != null && neighbor._isWalkable && neighbor._tileUnit == null && !processed.Contains(neighbor))
                     {
                         neighbor.SetColor(Color.red);
                         processed.Add(neighbor);
@@ -248,7 +248,7 @@ namespace Pathfinding._Scripts
                     return (path, acumCosts);
                 }
 
-                foreach (var neighbor in current.Neighbors.Where(t => (t.Walkable && t._tileUnit == null && !processed.Contains(t)) || t == targetNode))
+                foreach (var neighbor in current.Neighbors.Where(t => (t._isWalkable && t._tileUnit == null && !processed.Contains(t)) || t == targetNode))
                 {
                     var inSearch = toSearch.Contains(neighbor);
 

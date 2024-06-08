@@ -19,7 +19,7 @@ namespace Pathfinding._Scripts.Grid {
 
         public List<Unit> _unitList = new List<Unit>();
 
-        private NodeBase _currentNode, _goalNodeBase;
+        public NodeBase _currentNode, _goalNodeBase;
         private Unit _currentUnit;
 
         public bool _isTileMoved = false;
@@ -36,14 +36,15 @@ namespace Pathfinding._Scripts.Grid {
             foreach (var tile in tiles.Values) tile.CacheNeighbors();
 
             SpawnUnits();
-            NodeBase.OnSelectTile += TileSelected;
-            NodeBase.OnMappedTile += TileMapped;
+            NodeBase.OnMoveTile += TileSelected;
+            NodeBase.OnSelectTile += TileMapped;
+            NodeBase.OnUnselectTile += TileUnselected;
         }
         void SpawnUnits()
         {
             foreach(Unit unit in _unitList)
             {
-                NodeBase randomNode = tiles.Where(t => t.Value.Walkable && t.Value._tileUnit == null).OrderBy(t => Random.value).First().Value;
+                NodeBase randomNode = tiles.Where(t => t.Value._isWalkable && t.Value._tileUnit == null).OrderBy(t => Random.value).First().Value;
                 Unit instanceUnit = Instantiate(unit, randomNode.Coords.Pos, Quaternion.identity);
                 instanceUnit.Init(unit._sprite);
                 randomNode._tileUnit = instanceUnit;
@@ -52,17 +53,19 @@ namespace Pathfinding._Scripts.Grid {
             }
         }
 
-        private void OnDestroy() => NodeBase.OnSelectTile -= TileSelected;
+        private void OnDestroy() => NodeBase.OnMoveTile -= TileSelected;
 
         private void TileSelected(NodeBase nodeBase)
         {
-            _isUnitMoving = true;
+
             _goalNodeBase = nodeBase;
 
             foreach (var t in tiles.Values) t.RevertTile();
 
             if (Pathfinding.IsReachableNodes(_currentNode, _currentNode._tileUnit._movements).Contains(_goalNodeBase) || _isNpcTurn)
             {
+                _isUnitMoving = true;
+                
                 List<NodeBase> path = Pathfinding.FindPath(_currentNode, _goalNodeBase);
 
                 if (path != null && path.Count > 0)
@@ -117,6 +120,14 @@ namespace Pathfinding._Scripts.Grid {
             foreach (var t in tiles.Values) t.RevertTile();
 
             reacheableNodes = Pathfinding.MarkReachableNodes(nodeBase, nodeBase._tileUnit._movements);
+        }
+
+        private void TileUnselected(NodeBase nodeBase)
+        {
+            foreach (var t in tiles.Values) t.RevertTile();
+            ResetReachebleNodes();
+            _currentNode = null;
+            _isUnitMoving = false;
         }
 
         public void TestFourDirections(NodeBase nodeBase)

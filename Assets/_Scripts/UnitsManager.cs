@@ -52,6 +52,10 @@ public class UnitsManager : MonoBehaviour
                             path[path.Count - index].NodeIsMoved();
                         }
                     }
+                    else
+                    {
+                        print("AttackMode");
+                    }
                 }
             }
             yield return new WaitForSeconds(.5f);

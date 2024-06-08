@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class GameplayManager : MonoBehaviour
 {
+    private bool _isSelected = false;
+
     private void Update()
     {
         if(!GridManager.Instance._isNpcTurn && !GridManager.Instance._isUnitMoving)
@@ -33,10 +35,31 @@ public class GameplayManager : MonoBehaviour
 
             NodeBase node = clickedObject.GetComponent<NodeBase>();
 
-            if(node._tileUnit != null)
+            if(_isSelected == false && node._tileUnit != null)
+            {
                 node.NodeIsSelected();
-            else if(node._tileUnit == null)
-                node.NodeIsMoved();
+                _isSelected = true;
+            } 
+            else if (_isSelected && (node._isWalkable || node._isInRange))
+            {
+                if (GridManager.Instance._currentNode == node)
+                {
+                    node.NodeIsUnselected();
+                }
+                else if (GridManager.Instance._currentNode.Neighbors.Contains(node))
+                {
+                    print("Attack");
+                }
+                else
+                {
+                    node.NodeIsMoved();
+                }
+                _isSelected = false;
+            }
+            else
+            {
+                _isSelected = false;
+            }
         }
     }
 
