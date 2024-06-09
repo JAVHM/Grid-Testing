@@ -29,7 +29,7 @@ public class UnitsManager : MonoBehaviour
             if(unit._isNpc)
             {
                 NodeBase node = unit._actualNode;
-                (List<NodeBase> path, var costs) = Pathfinding._Scripts.Pathfinding.FindNearestEnemyNode(node, units, unit._team);
+                (NodeBase targetNode, List<NodeBase> path, var costs) = Pathfinding._Scripts.Pathfinding.FindNearestEnemyNode(node, units, unit._team);
                 if (path != null)
                 {
                     if (path.Count > 1)
@@ -54,7 +54,7 @@ public class UnitsManager : MonoBehaviour
                     }
                     else
                     {
-                        print("AttackMode");
+                        targetNode._tileUnit.GetComponent<Health>().TakeDamage(10);
                     }
                 }
             }

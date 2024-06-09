@@ -187,7 +187,7 @@ namespace Pathfinding._Scripts
             return GridManager.Instance.GetTileAtPosition(position);
         }
 
-        public static (List<NodeBase> path, List<int> costs) FindNearestEnemyNode(NodeBase startNode, Unit[] units, int team)
+        public static (NodeBase target, List<NodeBase> path, List<int> costs) FindNearestEnemyNode(NodeBase startNode, Unit[] units, int team)
         {
             NodeBase targetNode = null;
             float minDistance = Mathf.Infinity;
@@ -245,7 +245,7 @@ namespace Pathfinding._Scripts
 
                     foreach (var tile in path) tile.SetColor(PathColor);
                     startNode.SetColor(PathColor);
-                    return (path, acumCosts);
+                    return (targetNode, path, acumCosts);
                 }
 
                 foreach (var neighbor in current.Neighbors.Where(t => (t._isWalkable && t._tileUnit == null && !processed.Contains(t)) || t == targetNode))
@@ -268,7 +268,7 @@ namespace Pathfinding._Scripts
                     }
                 }
             }
-            return (null, null);
+            return (null, null, null);
         }
     }
 }

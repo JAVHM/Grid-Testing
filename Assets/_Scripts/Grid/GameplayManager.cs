@@ -35,7 +35,8 @@ public class GameplayManager : MonoBehaviour
 
             NodeBase node = clickedObject.GetComponent<NodeBase>();
 
-            if(_isSelected == false && node._tileUnit != null)
+
+            if(_isSelected == false && node._tileUnit != null && node._tileUnit._team == 1)
             {
                 node.NodeIsSelected();
                 _isSelected = true;
@@ -46,9 +47,10 @@ public class GameplayManager : MonoBehaviour
                 {
                     node.NodeIsUnselected();
                 }
-                else if (GridManager.Instance._currentNode.Neighbors.Contains(node))
+                else if (GridManager.Instance._currentNode.Neighbors.Contains(node) && node._tileUnit != null)
                 {
-                    print("Attack");
+                    node._tileUnit.GetComponent<Health>().TakeDamage(10);
+                    node.NodeIsUnselected();
                 }
                 else
                 {
