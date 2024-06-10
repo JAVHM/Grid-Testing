@@ -298,7 +298,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7341151215538218331, guid: 3e2b3382004a71946925a3e0938c28e2, type: 3}
       propertyPath: _unitList.Array.size
-      value: 7
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7341151215538218331, guid: 3e2b3382004a71946925a3e0938c28e2, type: 3}
       propertyPath: _unitList.Array.data[0]
@@ -315,7 +315,7 @@ PrefabInstance:
     - target: {fileID: 7341151215538218331, guid: 3e2b3382004a71946925a3e0938c28e2, type: 3}
       propertyPath: _unitList.Array.data[3]
       value: 
-      objectReference: {fileID: 2363439576862928994, guid: ec89a5531ade70441b2a3952f4bbcdf6, type: 3}
+      objectReference: {fileID: 1861827098908198204, guid: ff1baa9d98e6c1740847175b765ededf, type: 3}
     - target: {fileID: 7341151215538218331, guid: 3e2b3382004a71946925a3e0938c28e2, type: 3}
       propertyPath: _unitList.Array.data[4]
       value: 
@@ -434,6 +434,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d91ebdc91d7810b469e898ef99b08e6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerUnits: []
   npcUnits: []
 --- !u!4 &1687028033
 Transform:

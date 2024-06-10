@@ -1,7 +1,5 @@
 using Nodes.Tiles;
 using Pathfinding._Scripts.Grid;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameplayManager : MonoBehaviour
@@ -10,7 +8,7 @@ public class GameplayManager : MonoBehaviour
 
     private void Update()
     {
-        if(!GridManager.Instance._isNpcTurn && !GridManager.Instance._isUnitMoving)
+        if (!GridManager.Instance._isNpcTurn && !GridManager.Instance._isUnitMoving)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -36,11 +34,11 @@ public class GameplayManager : MonoBehaviour
             NodeBase node = clickedObject.GetComponent<NodeBase>();
 
 
-            if(_isSelected == false && node._tileUnit != null && node._tileUnit._team == 1)
+            if (_isSelected == false && node._tileUnit != null && node._tileUnit._team == 1)
             {
                 node.NodeIsSelected();
                 _isSelected = true;
-            } 
+            }
             else if (_isSelected && (node._isWalkable || node._isInRange))
             {
                 if (GridManager.Instance._currentNode == node)

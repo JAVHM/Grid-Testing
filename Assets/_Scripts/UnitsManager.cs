@@ -8,12 +8,13 @@ using UnityEngine;
 public class UnitsManager : MonoBehaviour
 {
     public static UnitsManager Instance;
+    public List<Unit> playerUnits = new List<Unit>();
     public List<Unit> npcUnits = new List<Unit>();
 
     void Awake() => Instance = this;
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !GridManager.Instance._isNpcTurn)
+        if (Input.GetKeyDown(KeyCode.Space) && !GridManager.Instance._isNpcTurn && playerUnits.Count != 0)
         {
             StartCoroutine(Test());
         }
@@ -26,7 +27,7 @@ public class UnitsManager : MonoBehaviour
 
         foreach (Unit unit in npcUnits) 
         {
-            if(unit._isNpc)
+            if(playerUnits.Count != 0)
             {
                 NodeBase node = unit._actualNode;
                 (NodeBase targetNode, List<NodeBase> path, var costs) = Pathfinding._Scripts.Pathfinding.FindNearestEnemyNode(node, units, unit._team);
@@ -61,5 +62,31 @@ public class UnitsManager : MonoBehaviour
             yield return new WaitForSeconds(.5f);
         }
         GridManager.Instance._isNpcTurn = false;
+    }
+
+    public void RemoveAndDestroyNpcUnits(Unit go)
+    {
+        if (npcUnits.Contains(go))
+        {
+            npcUnits.Remove(go);
+            Destroy(go.gameObject);
+        }
+        else
+        {
+            Debug.LogWarning("The GameObject to be destroyed was not found in the list.");
+        }
+    }
+
+    public void RemoveAndDestroyPlayerUnits(Unit go)
+    {
+        if (playerUnits.Contains(go))
+        {
+            playerUnits.Remove(go);
+            Destroy(go.gameObject);
+        }
+        else
+        {
+            Debug.LogWarning("The GameObject to be destroyed was not found in the list.");
+        }
     }
 }

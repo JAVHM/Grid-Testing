@@ -1,3 +1,4 @@
+using Pathfinding._Scripts.Units;
 using TMPro;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ public class Health : MonoBehaviour
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
-        GameObject textInst = Instantiate(textDamage, transform.position + new Vector3(0,1,0), Quaternion.identity);
+        GameObject textInst = Instantiate(textDamage, transform.position + new Vector3(0.5f, 0.5f,0), Quaternion.identity);
         textInst.GetComponent<TextMeshPro>().text = amount.ToString();
         Destroy(textInst, 2f);
         if (currentHealth <= 0)
@@ -25,7 +26,6 @@ public class Health : MonoBehaviour
             currentHealth = 0;
             Die();
         }
-        Debug.Log("Health: " + currentHealth);
     }
 
     // Method to heal
@@ -36,14 +36,15 @@ public class Health : MonoBehaviour
         {
             currentHealth = maxHealth;
         }
-        Debug.Log("Health: " + currentHealth);
     }
 
     // Method to check if the player is dead
     private void Die()
     {
-        Debug.Log("Death");
-        // Add death logic here (e.g., respawn, game over screen, etc.)
+        if(GetComponent<Unit>()._team == 1)
+            UnitsManager.Instance.RemoveAndDestroyPlayerUnits(this.GetComponent<Unit>());
+        else
+            UnitsManager.Instance.RemoveAndDestroyNpcUnits(this.GetComponent<Unit>());
     }
 
     // Method to get the current health

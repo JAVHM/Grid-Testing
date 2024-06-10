@@ -194,8 +194,9 @@ namespace Pathfinding._Scripts
 
             foreach (Unit unit in units)
             {
-                if(unit != startNode._tileUnit && unit._team != startNode._tileUnit._team)
+                if(unit != startNode._tileUnit && unit._team != startNode._tileUnit._team && unit != null)
                 {
+                    Debug.Log(unit.transform.position);
                     float distance = Vector3.Distance(startNode.gameObject.transform.position, unit.transform.position);
                     if (distance < minDistance)
                     {

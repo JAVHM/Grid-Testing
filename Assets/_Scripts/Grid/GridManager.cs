@@ -49,7 +49,10 @@ namespace Pathfinding._Scripts.Grid {
                 instanceUnit.Init(unit._sprite);
                 randomNode._tileUnit = instanceUnit;
                 instanceUnit._actualNode = randomNode;
-                UnitsManager.Instance.npcUnits.Add(instanceUnit);
+                if(instanceUnit._team == 1)
+                    UnitsManager.Instance.playerUnits.Add(instanceUnit);
+                else
+                    UnitsManager.Instance.npcUnits.Add(instanceUnit);
             }
         }
 
