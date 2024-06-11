@@ -68,6 +68,11 @@ namespace Nodes.Tiles
             OnSelectTile?.Invoke(this);
         }
 
+        public void ResetColor()
+        {
+            _renderer.color = _defaultColor;
+        }
+
         #region Pathfinding
 
         [Header("Pathfinding")]

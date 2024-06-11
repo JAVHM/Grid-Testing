@@ -196,7 +196,7 @@ namespace Pathfinding._Scripts
             {
                 if(unit != startNode._tileUnit && unit._team != startNode._tileUnit._team && unit != null)
                 {
-                    Debug.Log(unit.transform.position);
+                    //Debug.Log(unit.transform.position);
                     float distance = Vector3.Distance(startNode.gameObject.transform.position, unit.transform.position);
                     if (distance < minDistance)
                     {
@@ -271,6 +271,36 @@ namespace Pathfinding._Scripts
             }
             return (null, null, null);
         }
+
+        public static List<NodeBase> MarkNodesInRange(NodeBase startNode, int range)
+        {
+            var toSearch = new Queue<(NodeBase node, int distance)>();
+            var processed = new HashSet<NodeBase>();
+            var markedNodes = new List<NodeBase>();
+
+            toSearch.Enqueue((startNode, 0));
+            processed.Add(startNode);
+
+            while (toSearch.Count > 0)
+            {
+                var (currentNode, currentDistance) = toSearch.Dequeue();
+
+                if (currentDistance > range)
+                    continue;
+
+                currentNode.SetColor(Color.red);
+                markedNodes.Add(currentNode);
+
+                foreach (var neighbor in currentNode.Neighbors.Where(t => !processed.Contains(t)))
+                {
+                    processed.Add(neighbor);
+                    toSearch.Enqueue((neighbor, currentDistance + 1));
+                }
+            }
+
+            return markedNodes;
+        }
+
     }
 }
 

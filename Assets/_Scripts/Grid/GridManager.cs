@@ -19,14 +19,14 @@ namespace Pathfinding._Scripts.Grid {
 
         public List<Unit> _unitList = new List<Unit>();
 
-        public NodeBase _currentNode, _goalNodeBase;
+        public NodeBase _currentNode, _goalNode, _selectCenterNode;
         private Unit _currentUnit;
 
         public bool _isTileMoved = false;
         public bool _isNpcTurn = false;
         public bool _isUnitMoving = false;
 
-        private List<NodeBase> reacheableNodes = new List<NodeBase>();
+        private List<NodeBase> reacheableNodes, selectableNodes = new List<NodeBase>();
 
         void Awake() => Instance = this;
 
@@ -61,15 +61,15 @@ namespace Pathfinding._Scripts.Grid {
         private void TileSelected(NodeBase nodeBase)
         {
 
-            _goalNodeBase = nodeBase;
+            _goalNode = nodeBase;
 
             foreach (var t in tiles.Values) t.RevertTile();
 
-            if (Pathfinding.IsReachableNodes(_currentNode, _currentNode._tileUnit._movements).Contains(_goalNodeBase) || _isNpcTurn)
+            if (Pathfinding.IsReachableNodes(_currentNode, _currentNode._tileUnit._movements).Contains(_goalNode) || _isNpcTurn)
             {
                 _isUnitMoving = true;
                 
-                List<NodeBase> path = Pathfinding.FindPath(_currentNode, _goalNodeBase);
+                List<NodeBase> path = Pathfinding.FindPath(_currentNode, _goalNode);
 
                 if (path != null && path.Count > 0)
                 {
@@ -90,9 +90,9 @@ namespace Pathfinding._Scripts.Grid {
 
             yield return StartCoroutine(unitMover.MoveAlongPath(path, 50f));
 
-            _currentUnit.transform.position = _goalNodeBase.transform.position;
+            _currentUnit.transform.position = _goalNode.transform.position;
             _currentNode._tileUnit = null;
-            _currentNode = _goalNodeBase;
+            _currentNode = _goalNode;
             _currentNode._tileUnit = _currentUnit;
             _currentNode._tileUnit._actualNode = _currentNode;
             _isUnitMoving = false;
@@ -133,9 +133,21 @@ namespace Pathfinding._Scripts.Grid {
             _isUnitMoving = false;
         }
 
-        public void TestFourDirections(NodeBase nodeBase)
+        public void TestAreaAttack(NodeBase nodeBase)
         {
-            Pathfinding.MarkReachableNodesInFourDirections(nodeBase, 3);
+            if(_selectCenterNode == null)
+            {
+                _selectCenterNode = nodeBase;
+                selectableNodes = Pathfinding.MarkNodesInRange(nodeBase, 3);
+            }
+            if(_selectCenterNode != nodeBase)
+            {
+                print("New node");
+                ResetSelectableNodes();
+                _selectCenterNode = nodeBase;
+                selectableNodes = Pathfinding.MarkNodesInRange(nodeBase, 3);
+            }
+                
         }
 
         private void ResetReachebleNodes()
@@ -143,6 +155,14 @@ namespace Pathfinding._Scripts.Grid {
             foreach(NodeBase n in reacheableNodes)
             {
                 n._isInRange = false;
+            }
+        }
+
+        private void ResetSelectableNodes()
+        {
+            foreach (NodeBase n in selectableNodes)
+            {
+                n.ResetColor();
             }
         }
 

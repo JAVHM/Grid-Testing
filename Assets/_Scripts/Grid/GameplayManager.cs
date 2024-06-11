@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameplayManager : MonoBehaviour
 {
     private bool _isSelected = false;
+    public bool _isRangeAttackTest = false;
 
     private void Update()
     {
@@ -14,11 +15,16 @@ public class GameplayManager : MonoBehaviour
             {
                 HandleClick(0);
             }
+        }
 
-            if (Input.GetMouseButtonDown(1))
-            {
-                HandleClick2(0);
-            }
+        if (!_isRangeAttackTest && Input.GetMouseButtonDown(1))
+        {
+            _isRangeAttackTest = true;
+        }
+        if (_isRangeAttackTest == true)
+        {
+            HandleClick2(0);
+
         }
     }
 
@@ -74,7 +80,7 @@ public class GameplayManager : MonoBehaviour
 
             NodeBase node = clickedObject.GetComponent<NodeBase>();
 
-            GridManager.Instance.TestFourDirections(node);
+            GridManager.Instance.TestAreaAttack(node);
         }
     }
 }
