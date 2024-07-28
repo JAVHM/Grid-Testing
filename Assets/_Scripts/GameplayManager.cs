@@ -5,55 +5,47 @@ using UnityEngine;
 public class GameplayManager : MonoBehaviour
 {
     private bool _isSelected = false;
-    public bool _isRangeAttackTest = false;
+
+    private GridManager _gridManager;
+    private Camera _mainCamera;
+
+    private void Awake()
+    {
+        _gridManager = GridManager.Instance;
+        _mainCamera = Camera.main;
+    }
 
     private void Update()
     {
-        if (!GridManager.Instance._isNpcTurn && !GridManager.Instance._isUnitMoving)
+        if (!_gridManager._isNpcTurn && !_gridManager._isUnitMoving)
         {
             if (Input.GetMouseButtonDown(0))
             {
-                HandleClick(0);
+                ClickMap();
             }
-        }
-
-        if (!_isRangeAttackTest && Input.GetMouseButtonDown(1))
-        {
-            _isRangeAttackTest = true;
-        }
-        if (_isRangeAttackTest == true)
-        {
-            HandleClick2(0);
-
         }
     }
 
-    private void HandleClick(int mouseButton)
+    private void ClickMap()
     {
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
+        NodeBase node = GetNodeUnderMouse();
 
-        if (hit.collider != null)
+        if (node != null)
         {
-            GameObject clickedObject = hit.collider.gameObject;
-
-            NodeBase node = clickedObject.GetComponent<NodeBase>();
-
-
-            if (_isSelected == false && node._tileUnit != null && node._tileUnit._team == 1)
+            if (!_isSelected && node._tileUnit != null && node._tileUnit._team == 1)
             {
                 node.NodeIsSelected();
                 _isSelected = true;
             }
-            else if (_isSelected && (node._isWalkable || node._isInRange))
+            else if (node._tileUnit != null && node._tileUnit._team == 1)
             {
-                if (GridManager.Instance._currentNode == node)
+                GridManager.Instance._currentNode.NodeIsUnselected();
+                node.NodeIsSelected();
+            }
+            else if (_isSelected && node._isWalkable && node._isInRange)
+            {
+                if (_gridManager._currentNode == node || node._tileUnit != null)
                 {
-                    node.NodeIsUnselected();
-                }
-                else if (GridManager.Instance._currentNode.Neighbors.Contains(node) && node._tileUnit != null)
-                {
-                    node._tileUnit.GetComponent<Health>().TakeDamage(10);
                     node.NodeIsUnselected();
                 }
                 else
@@ -62,25 +54,25 @@ public class GameplayManager : MonoBehaviour
                 }
                 _isSelected = false;
             }
-            else
+            else if (_isSelected && _gridManager._currentNode.Neighbors.Contains(node) && node._tileUnit != null)
             {
+                node._tileUnit.GetComponent<Health>().TakeDamage(10);
+                node.NodeIsUnselected();
                 _isSelected = false;
             }
         }
     }
 
-    private void HandleClick2(int mouseButton)
+    private NodeBase GetNodeUnderMouse()
     {
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
 
         if (hit.collider != null)
         {
-            GameObject clickedObject = hit.collider.gameObject;
-
-            NodeBase node = clickedObject.GetComponent<NodeBase>();
-
-            GridManager.Instance.TestAreaAttack(node);
+            return hit.collider.gameObject.GetComponent<NodeBase>();
         }
+
+        return null;
     }
 }

@@ -15,5 +15,5 @@ MonoBehaviour:
   _gridWidth: 35
   _gridHeight: 35
   nodeBasePrefabs:
-  - {fileID: 1713175213529312491, guid: 7d080b35862b255438a7d74e55b98bc5, type: 3}
-  _obstacleWeight: 0
+  - {fileID: 1263727174166914258, guid: 060835d03b849954587adde059cef48d, type: 3}
+  _obstacleWeight: 1
