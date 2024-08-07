@@ -26,15 +26,16 @@ public class GameplayManager : MonoBehaviour
     {
         NodeBase node = GetNodeUnderMouse();
 
-        if (node == null) return;
-
-        if (node._tileUnit != null && node._tileUnit._team == 1)
+        if (node != null)
         {
-            HandleUnitSelection(node);
-        }
-        else if (_isSelected)
-        {
-            HandleNodeInteraction(node);
+            if (node._tileUnit != null && node._tileUnit._team == 1)
+            {
+                HandleUnitSelection(node);
+            }
+            else if (_isSelected)
+            {
+                HandleNodeInteraction(node);
+            }
         }
     }
 

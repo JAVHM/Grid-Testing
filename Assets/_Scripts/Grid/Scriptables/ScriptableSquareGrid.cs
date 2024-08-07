@@ -27,7 +27,35 @@ namespace Pathfinding._Scripts.Grid.Scriptables
                 {
                     var randomPrefabIndex = Random.Range(0, nodeBasePrefabs.Count);
                     var tile = Instantiate(nodeBasePrefabs[randomPrefabIndex], grid.transform);
-                    tile.Init(DecideIfObstacle(), new SquareCoords { Pos = new Vector3(x, y) });
+
+                    // Decidir si es un obstáculo, false si es contorno
+                    bool isObstacle = DecideIfObstacle();
+                    if (x == 0 || x == _gridWidth - 1 || y == 0 || y == _gridHeight - 1)
+                    {
+                        isObstacle = false;
+                    }
+
+                    tile.Init(isObstacle, new SquareCoords { Pos = new Vector3(x, y) });
+                    tiles.Add(new Vector2(x, y), tile);
+                }
+            }
+
+            return tiles;
+        }
+
+
+        public Dictionary<Vector2, NodeBase> SetGrid(GameObject grid)
+        {
+            var tiles = new Dictionary<Vector2, NodeBase>();
+
+            foreach (Transform child in grid.transform)
+            {
+                if (child.gameObject.GetComponent<NodeBase>() != null)
+                {
+                    var tile = child.GetComponent<NodeBase>();
+                    float x = child.position.x;
+                    float y = child.position.y;
+                    tile.Init(tile._isWalkable, new SquareCoords { Pos = new Vector3(x, y) });
                     tiles.Add(new Vector2(x, y), tile);
                 }
             }

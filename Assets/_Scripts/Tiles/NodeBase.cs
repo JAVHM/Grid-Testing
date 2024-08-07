@@ -20,7 +20,7 @@ namespace Nodes.Tiles
 
         public ICoords Coords;
         public float GetDistance(NodeBase other) => Coords.GetDistance(other.Coords); // Helper to reduce noise in pathfinding
-        public bool _isWalkable { get; private set; }
+        public bool _isWalkable;
         private Color _defaultColor;
 
         public static event Action<NodeBase> OnMoveTile;
@@ -117,9 +117,9 @@ namespace Nodes.Tiles
         public void RevertTile()
         {
             _renderer.color = _defaultColor;
-            _gCostText.text = "";
-            _hCostText.text = "";
-            _fCostText.text = "";
+            //_gCostText.text = "";
+            //_hCostText.text = "";
+            //_fCostText.text = "";
         }
 
         public int CompareTo(NodeBase other)

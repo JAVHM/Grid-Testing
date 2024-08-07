@@ -23,11 +23,11 @@ public class UnitsManager : MonoBehaviour
     IEnumerator Test()
     {
         GridManager.Instance._isNpcTurn = true;
-        Unit[] units = FindObjectsOfType<Unit>(); 
+        Unit[] units = FindObjectsOfType<Unit>();
 
-        foreach (Unit unit in npcUnits) 
+        foreach (Unit unit in npcUnits)
         {
-            if(playerUnits.Count != 0)
+            if (playerUnits.Count != 0)
             {
                 NodeBase node = unit._actualNode;
                 (NodeBase targetNode, List<NodeBase> path, var costs) = Pathfinding._Scripts.Pathfinding.FindNearestEnemyNode(node, units, unit._team);
@@ -35,15 +35,15 @@ public class UnitsManager : MonoBehaviour
                 {
                     if (path.Count > 1)
                     {
-                        yield return new WaitForSeconds(0.25f);
+                        yield return new WaitForSeconds(0.01f);
                         node.NodeIsSelected();
-                        yield return new WaitForSeconds(0.25f);
+                        // yield return new WaitForSeconds(0.25f);
                         if (costs[costs.Count - 2] <= unit._movements)
                             path[path.Count - (path.Count - 1)].NodeIsMoved();
                         else
                         {
                             int index = 0;
-                            foreach(int cost in costs)
+                            foreach (int cost in costs)
                             {
                                 // print(cost + " > " + unit._movements + "index: " + (index + 1));
                                 if (cost > unit._movements)
@@ -59,9 +59,9 @@ public class UnitsManager : MonoBehaviour
                     }
                 }
             }
-            yield return new WaitForSeconds(.5f);
         }
         GridManager.Instance._isNpcTurn = false;
+        yield return null;
     }
 
     public void RemoveAndDestroyNpcUnits(Unit go)
